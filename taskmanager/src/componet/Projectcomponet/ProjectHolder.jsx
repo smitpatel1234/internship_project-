@@ -7,7 +7,7 @@ import {
   setChangeInProject,
   removeProject,
 } from "../../features/Todolist/projectSlice";
-
+import { GET_PROJECTS } from "../../features/Todolist/projectSlice";
 const column = [
   {
     title: "id",
@@ -36,18 +36,7 @@ function ProjectHolder({ search }) {
 
   const dispatch = useDispatch("");
 
-  const temporary_pro = useSelector((state) => {
-    const projectList = state.projectStore.projectList;
-    const userList = state.userStore.userList;
-   
-    return projectList.map((project) => {
-      const user = userList.find((user) => user.id == project.manageBy);
-      return {
-        ...project,
-        managebyName: user.username,
-      };
-    });
-  });
+  const temporary_pro = useSelector(GET_PROJECTS);
    const projectList = temporary_pro.filter(
       (project) =>
         project.title.toLowerCase().includes(search.toLowerCase()) || project.description.toLowerCase().includes(search.toLowerCase()) || project.id.toString().toLowerCase().includes(search.toLowerCase()) || project.managebyName.toLowerCase().includes(search.toLowerCase())

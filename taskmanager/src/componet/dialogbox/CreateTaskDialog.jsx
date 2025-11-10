@@ -10,12 +10,23 @@ import DatePicakerinDialog, { todaysdate } from "./DatePicakerinDialog";
 import InputTextInDialog from "./InputTextInDialog";
 import { setChange } from "../../features/Todolist/taskSlice";
 
-const states = [{id:"BackLog Subtasks" ,name:"BackLog Subtasks"}, {id:"In Process",name:"In Process"},{id:"In Process",name:"Completed"}];
-
-function CreateTaskDialog({ open, onClose, onSave ,title}) {
+function CreateTaskDialog({ open, onClose, onSave, title }) {
   const task = useSelector((state) => state.taskStore.task);
   const dispatch = useDispatch();
 
+  const boards = useSelector((state) =>
+    state.boardStore.boardList.map((board) => ({
+      id: board.id,
+      name: board.name,
+    }))
+  );
+ const userList = useSelector((state) =>
+    state.userStore.userList.map((user) => ({
+      id: user.id,
+      name: user.username,
+    }))
+  );
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     dispatch(setChange({ [name]: value }));
@@ -29,6 +40,7 @@ function CreateTaskDialog({ open, onClose, onSave ,title}) {
           &#10060;
         </Button>
       </div>
+
       <DialogContent className="dialogcontent">
         <div className="firstDialogcontainer">
           <InputTextInDialog
@@ -40,26 +52,34 @@ function CreateTaskDialog({ open, onClose, onSave ,title}) {
           <InputTextInDialog
             value={task?.state ?? ""}
             name={"state"}
-            states={states}
+            states={boards}
             required={true}
             handleChange={handleChange}
           />
         </div>
+        <InputTextInDialog
+            value={task?.assigTo ?? ""}
+            name={"assigTo"}
+            states={userList}
+            required={true}
+            handleChange={handleChange}
+          />
+         
         <DatePicakerinDialog
           value={task?.date ?? todaysdate}
           required={true}
           handleChange={handleChange}
-        ></DatePicakerinDialog>
+        />
 
         <InputTextInDialog
           value={task?.description ?? ""}
           name={"description"}
           handleChange={handleChange}
         />
-        
       </DialogContent>
+
       <DialogActions className="dialogtitle">
-        <Button onClick={onSave} color="primary" className="dialogtitletext">
+        <Button onClick={onSave} color="primary" className="dialogtitletext" variant="outlined">
           {title.includes("Create") ? "Create" : "Edit"}
         </Button>
       </DialogActions>

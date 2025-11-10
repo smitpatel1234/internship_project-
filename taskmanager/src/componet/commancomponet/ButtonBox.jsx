@@ -9,6 +9,7 @@ export default function ButtonBox({
   stylename,
   editIcon,
   deleteIcon,
+  type,
 }) {
   return (
     <div className={stylename}>
@@ -16,6 +17,7 @@ export default function ButtonBox({
         sx={{ fontSize: "1em" }}
         variant="contained"
         onClick={onClickFunction}
+        type={type}
       >
          {
           editIcon ? (

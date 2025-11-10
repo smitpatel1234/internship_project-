@@ -15,7 +15,6 @@ export default function SideBar() {
                <Link  className='link' to='/dashboardlayout/dashboard/'><li><img src={ic2} alt="task" /><article>task</article></li></Link>
                <Link  className='link' to='/dashboardlayout/user/'><li><img src={ic3} alt="work load" /><article>work load</article></li></Link>
                <Link  className='link' to='/dashboardlayout/role/'><li><img src={ic4} alt="role" /><article>role</article></li></Link>
-               <Link  className='link' to='/dashboardlayout/settings/'><li><img src={ic5} alt="settings" /><article>settings</article></li></Link>
             </ul>
         </aside>
   

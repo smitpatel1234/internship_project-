@@ -13,7 +13,9 @@ const states = ["BackLog Subtasks", "In Process", "Completed"];
 
 function CrateProjectDialog({ open, onClose, onSave ,title}) {
   const project = useSelector((state) => state.projectStore.project);
-  const userlist = useSelector((state)=>state.userStore.userList)
+  const userlist = useSelector((state)=>state.userStore.userList.filter((user)=>( user.roleId===12213 || user.roleId===12212)))
+  console.log(userlist);
+  
   const dispatch = useDispatch();
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +54,7 @@ function CrateProjectDialog({ open, onClose, onSave ,title}) {
           />
         </DialogContent>
         <DialogActions className="dialogtitle">
-          <Button onClick={onSave} color="primary" className="dialogtitletext">
+          <Button onClick={onSave} color="primary" className="dialogtitletext" variant="outlined">
             Create
           </Button>
         </DialogActions>

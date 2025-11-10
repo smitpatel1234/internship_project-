@@ -53,7 +53,6 @@ export default function InputTextInDialog({ value, name, states, required,handle
 
 
   const isDescription = name?.toLowerCase().includes("description");
- console.log(states);
  
   return (
     <ThemeProvider theme={theme}>

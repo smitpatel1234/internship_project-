@@ -59,7 +59,7 @@ function CrateUserDialog({ open, onClose, onSave ,title}) {
           />
         </DialogContent>
         <DialogActions className="dialogtitle">
-          <Button onClick={onSave} color="primary" className="dialogtitletext">
+          <Button onClick={onSave} color="primary" className="dialogtitletext" variant="outlined">
             Create
           </Button>
         </DialogActions>

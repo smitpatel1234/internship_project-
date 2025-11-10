@@ -1,4 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice,createSelector } from "@reduxjs/toolkit";
+const projectList  = (state) => state.projectStore.projectList;
+const userList = (state) => state.userStore.userList;
+export const GET_PROJECTS = createSelector(
+ [projectList, userList],(projectList,userList)=>{
+ return projectList.map((project) => {
+      const user = userList.find((user) => user.id == project.manageBy);
+      return {
+        ...project,
+        managebyName: user.username,
+      };
+    });}
+)
 
 const projectSlice = createSlice({
     name:'projectStore',
@@ -39,5 +51,5 @@ const projectSlice = createSlice({
         
     }
 })
-export const { setChangeInProject,addProject,removeProject,editProject} = projectSlice.actions
+export const { setChangeInProject,addProject,removeProject,editProject } = projectSlice.actions
 export default projectSlice.reducer
