@@ -1,20 +1,16 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import RoleHolder from '../rolecomponent/RoleHolder'
 import ButtonBox from '../commancomponet/ButtonBox'
 import Searchbar from '../commancomponet/Searchbar'
-import Listview from '../commancomponet/Listview'
+
 import { saveRoleAndPermissionChanges } from '../../features/Todolist/roleAndPermissionSlice'
 
 function Role() {
   const dispatch = useDispatch()
-  const roleAndPermissionList = useSelector(
-    (state) => state.roleAndPermissionStore.roleAndPermissionList
-  )
 
   const handleSave = () => {
     dispatch(saveRoleAndPermissionChanges())
-    
   }
 
   return (
@@ -27,7 +23,7 @@ function Role() {
           <hr className="lineofhr" />
         </div>
      
-        <ButtonBox value={'Save'} onClickfunction={handleSave} />
+        <ButtonBox value={'Save'} onClickFunction={handleSave} />
         <div className='roles'>
           <RoleHolder />
         </div>

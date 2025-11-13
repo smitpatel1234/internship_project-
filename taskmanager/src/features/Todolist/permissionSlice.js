@@ -18,7 +18,6 @@ const permissionSlice = createSlice({
              permission:"VIEW_PROJECT",
              parentId:1
             },
-            
              {
              id:3,
              permission:"EDIT_PROJECT",
@@ -30,10 +29,6 @@ const permissionSlice = createSlice({
              parentId:1
             },
             {
-             id:5,
-             permission:"ASSIGN_PROJECT",
-             parentId:1
-            }, {
              id:6,
              permission:"TASK",
              parentId:null
@@ -85,17 +80,33 @@ const permissionSlice = createSlice({
              id:18,
              permission:"EDIT_BOARD",
              parentId:13
-            }, {
-             id:19,
-             permission:"ASSIGN_BOARD",
-             parentId:13
+            }, 
+            {
+             id:31,
+             permission:"USER",
+             parentId:null
             },
              {
-             id:20,
-             permission:"VIEW_BOARD",
-             parentId:13
+             id:32,
+             permission:"ADD_USER",
+             parentId:31
             },
-
+             {
+             id:34,
+             permission:"VIEW_USER",
+             parentId:31
+            },
+             {
+             id:33,
+             permission:"EDIT_USER",
+             parentId:31
+            },
+             {
+             id:35,
+             permission:"REMOVE_USER",
+             parentId:31
+            },
+          
         ]
      }
 

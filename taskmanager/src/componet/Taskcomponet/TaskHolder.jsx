@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useEffect} from "react";
 import Taskcard from "./Taskcard";
 import { useSelector } from "react-redux";
 import CreateTaskDialog from "../dialogbox/CreateTaskDialog";
@@ -6,7 +6,13 @@ import { addTask, setChange } from "../../features/Todolist/taskSlice";
 import { useDispatch } from "react-redux";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { editBoard, removeBoard } from "../../features/Todolist/boardSlice";
+import { changeBoard, removeBoard } from "../../features/Todolist/boardSlice";
+import ButtonBox from "../commancomponet/ButtonBox";
+import EditTask from "../dialogbox/EditTask";
+import MenuItemBox from "../commancomponet/MenuItemBox";
+import DeleteBox from "../dialogbox/DeleteBox";
+import ComponentHider, { usePermissionChecker } from "../Middelware/ComponentHider";
+import { GET_TASK } from "../../features/Todolist/taskSlice";
 export function todaysdate() {
   let now = new Date(Date.now());
   let year = now.getFullYear();
@@ -15,39 +21,42 @@ export function todaysdate() {
 
   return `${year}-${month}-${day}`;
 }
-function TaskHolder({ barname, listeners, attributes ,barId }) {
-  const tasks = useSelector((state) => state.taskStore.tasks);
+
+function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn ,taskStateColumn}) {
+  const [openDelete, setopenDelet] = React.useState(false);
+
+
+  const handleCloseDelete = () => {
+    setopenDelet(false);
+  };
+  const handleDeleteDailog = () => {
+    setopenDelet(true);
+  };
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const tasks = useSelector(GET_TASK);
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const menuRef = React.useRef(null);
-  React.useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleEdit = () => {
-    const newName = prompt("Enter new name:", barId);
-    if (newName) {
-      dispatch(editBoard({ id: barId, name: newName }));
-    }
-    setMenuOpen(false);
-  };
+    dispatch(changeBoard({ id: barId }));
+    setOpen(true);
 
-  const handleDelete = () => {
+  };
+ 
+  const handleDel = () => {
     dispatch(removeBoard({ id: barId }));
 
-    setMenuOpen(false);
   };
 
   function onSaveCall() {
+    
     dispatch(addTask());
     setOpenDialog(false);
+
   }
 
   const handleOpenDialog = () => {
@@ -63,10 +72,9 @@ function TaskHolder({ barname, listeners, attributes ,barId }) {
     setOpenDialog(true);
   };
 
-  const columnTasks = tasks.filter((task) => task.state === barId);
+  const columnTasks = tasks.filter((task) => task.state === barId  );
   const columnTaskIds = columnTasks.map((t) => `task-${t.id}`);
 
-  // Make column droppable for tasks
   const { setNodeRef } = useDroppable({
     id: barId,
   });
@@ -75,24 +83,37 @@ function TaskHolder({ barname, listeners, attributes ,barId }) {
     <div className="taskHolder">
       {/* Column title bar - draggable for column reordering */}
       <div className="titelBar">
-        <span {...attributes} {...listeners} style={{ cursor: "grab" }}>
+        <span {...attributes} {...listeners} style={{ cursor: "grab" ,overflow:"hidden"}}>
           {barname}
         </span>
-        <p className="menu-trigger" onClick={() => setMenuOpen(!menuOpen)}>
-          ...
-        </p>
 
-        {menuOpen && (
-          <div className="popup-menu" ref={menuRef}>
-            <button onClick={handleEdit}>✏️ Edit</button>
-            <button onClick={handleDelete}>🗑️ Delete</button>
-          </div>
-        )}
+       {(usePermissionChecker(18) || usePermissionChecker(17)) &&
+        <MenuItemBox>
+        <ComponentHider ComponentId={18}>
+          <ButtonBox
+            stylename="tablebutton"
+            editIcon
+            value={" Edit "}
+            variant={"outlined"}
+            onClickFunction={handleEdit}
+          />
+          </ComponentHider>
+          <ComponentHider ComponentId={17}>
+          <ButtonBox
+            stylename="tablebutton"
+            deleteIcon
+            value={"Delete"}
+            variant={"outlined"}
+            onClickFunction={handleDeleteDailog}
+          />
+          </ComponentHider>
+        </MenuItemBox>}
       </div>
-
+      <ComponentHider ComponentId={7}>
       <button className="addTask" onClick={handleOpenDialog}>
         +
       </button>
+      </ComponentHider>
       <div className="taskListSholder" ref={setNodeRef}>
         <SortableContext items={columnTaskIds} id="sortableContextOfTask">
           {columnTasks.map((task, idx) => (
@@ -109,6 +130,12 @@ function TaskHolder({ barname, listeners, attributes ,barId }) {
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         onSave={onSaveCall}
+      />
+      <EditTask open={open} onClose={handleClose} title={"Edit"} id={barId} />
+      <DeleteBox
+        open={openDelete}
+        handleCloseDelete={handleCloseDelete}
+        handleDelete={handleDel}
       />
     </div>
   );

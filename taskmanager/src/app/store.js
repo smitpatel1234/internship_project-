@@ -7,6 +7,7 @@ import roleAndPermissionStore from '../features/Todolist/roleAndPermissionSlice'
 import permissionReducer from  '../features/Todolist/permissionSlice'
 import  boardStoreReducer from '../features/Todolist/boardSlice'
 import currentUserStoreReducer from '../features/currentUser/currentUserSlice'
+import userAndProjectSliceStoreReducer from '../features/Todolist/userAndProjectSlice'
 import {persistStore , persistReducer , FLUSH,REHYDRATE,PAUSE,PERSIST,PURGE,REGISTER} from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
 const persistConfig = {
@@ -22,6 +23,7 @@ const rootReducer =combineReducers({
      permissionStore:permissionReducer,
      boardStore:boardStoreReducer,
      currentUserStore:currentUserStoreReducer,
+     userAndProjectSliceStore:userAndProjectSliceStoreReducer
 })
 const persistedReducer = persistReducer(persistConfig,rootReducer)
 export const store = configureStore({

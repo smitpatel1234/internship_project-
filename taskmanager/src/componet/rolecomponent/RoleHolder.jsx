@@ -14,10 +14,10 @@ function RoleHolder() {
   const roleAndPermissionList = useSelector(state => state.roleAndPermissionStore.roleAndPermissionList)
   const savedRoleAndPermissionList = useSelector(state => state.roleAndPermissionStore.savedRoleAndPermissionList)
   useEffect(() => {
-    if (savedRoleAndPermissionList.length > 0) {
+    
          dispatch(restoreSavedPermissions())
-    }
-  }, [dispatch])
+    
+  }, [savedRoleAndPermissionList])
 
   const handleToggle = (roleId, permissionId, checked) => {
        if (checked) {

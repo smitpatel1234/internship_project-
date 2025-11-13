@@ -7,20 +7,21 @@ import Dashboard from './componet/Maincomponets/Dashboard';
 import Login from './componet/Maincomponets/Login';
 import DashboardLayout from './componet/Maincomponets/Dashboardlayout';
 import Role from './componet/Maincomponets/Role';
+import PrivateRoutes from './componet/Middelware/PrivateRoutes'
 export default function App() {
   return (
     <div className="appclass">
       
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route  element={<PrivateRoutes />}>
           <Route path="/dashboardlayout" element={<DashboardLayout />}>
           <Route path='role' element={<Role/>}/>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="user" element={<User/>}/>
           <Route path="project" element={<Project/>}/>
-         
+        </Route>
           </Route>
-            
         </Routes>
      
     </div>

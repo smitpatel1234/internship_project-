@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Component } from "react";
 import Searchbar from "../commancomponet/Searchbar";
-import Listview from "../commancomponet/Listview";
 import ButtonBox from "../commancomponet/ButtonBox";
 import CreateUserDialogBox from "../dialogbox/CreateUserDialogBox";
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 import { addUser,setChangeInUser } from "../../features/Todolist/userSlice";
 import UserHolder from "../usercomponent/UserHolder";
+import ComponentHider from "../Middelware/ComponentHider"
 function User() {
   
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -34,14 +34,17 @@ function User() {
   return (
     <div className="main">
       <div className="taskslide">
+        <ComponentHider ComponentId={32}>
         <ButtonBox
           onClickFunction={handelOpenDialog}
           value="+"
           stylename="addbuttonofproject"
         />
+        </ComponentHider>
+
         <div className="overview">
           <h2>
-            Work load
+            User
             <CreateUserDialogBox
               title={"Create User"}
               onClose={handelCloseDialog}
@@ -55,7 +58,9 @@ function User() {
         </div>
         <Searchbar handleChange={handelsearch} search={search} />        
         <div className="project">
+           <ComponentHider ComponentId={34}>
           <UserHolder search={search} />
+          </ComponentHider>
         </div>
       </div>
     </div>

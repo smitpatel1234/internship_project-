@@ -107,9 +107,10 @@ body {
   justify-items: center;
   text-align: right;
   margin-right: 0.5em;
+  font-size: medium;
 }
 .header small {
-  font-size: 75%;
+  font-size: 45%;
   color: #b8c7df;
   margin-right: 0.5em;
 }
@@ -164,10 +165,11 @@ body {
   padding: 1%;
   align-items: center;
   border-radius: 10px;
-  border: #64b5f6 ,1px solid;
+  border:
+    #64b5f6,
+    1px solid;
   align-self: center;
   margin: 1%;
-   
 }
 
 .divsearch i {
@@ -181,20 +183,17 @@ body {
   outline: none;
   box-shadow: none;
   width: 90%;
- 
-    font-size: small;
-  
-   
 
+  font-size: small;
 }
 .divsearch input:focus::placeholder {
-    color: transparent; 
-    transform: scale(0.8);
+  color: transparent;
+  transform: scale(0.8);
 }
 .divsearch ::placeholder {
-      color: #1976d2; 
-      opacity: 1; 
-    }
+  color: #1976d2;
+  opacity: 1;
+}
 
 .taskslide {
   display: grid;
@@ -294,8 +293,8 @@ body {
   border: var(--french-gray) 2px soild;
 }
 .taskHolder {
-  min-width: 20em;
-  height: 100%;
+  width: 20em;
+  height: 97%;
   background-color: white;
   border: var(--french-gray) 2px solid;
   border-radius: 10px;
@@ -360,7 +359,7 @@ body {
     }
   }
   .taskcard {
-       width: 92%;
+    width: 92%;
     height: max-content;
     margin: 1%;
     padding: 2%;
@@ -384,8 +383,6 @@ body {
   }
 }
 
-
-
 .task-columns {
   grid-row: 6/22;
   grid-column: 1/22;
@@ -394,7 +391,7 @@ body {
   width: 100%;
   height: 100%;
   align-items: flex-start;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .dialogbox {
   width: 100%;
@@ -473,9 +470,9 @@ body {
   height: 100%;
   justify-content: space-between;
 
-  .taskstateindicator{
-     width: 11%;
-     height: 100%;
+  .taskstateindicator {
+    width: 11%;
+    height: 100%;
   }
   div {
     padding: 1%;
@@ -483,9 +480,9 @@ body {
     justify-self: center;
     font-size: small;
     font-weight: 400;
-    .titlespoint{
- width: 25%;
-    height: 1em;
+    .titlespoint {
+      width: 25%;
+      height: 1em;
     }
     .Completed {
       background-color: green;
@@ -493,26 +490,25 @@ body {
       border-radius: 50%;
       padding: 2%;
       font-size: x-small;
-    font-weight: 600;
-  }
-  .In.Process {
-    background-color: yellow;
-    color: black;
-    border-radius: 50%;
-    padding: 2%;
-    font-size: x-small;
-    font-weight: 600;
-  }
-  .BackLog.Subtasks {
-     background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 2%;
-    font-size: x-small;
-    font-weight: 600;
-    text-align: center;
-   
-  }
+      font-weight: 600;
+    }
+    .In.Process {
+      background-color: yellow;
+      color: black;
+      border-radius: 50%;
+      padding: 2%;
+      font-size: x-small;
+      font-weight: 600;
+    }
+    .BackLog.Subtasks {
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2%;
+      font-size: x-small;
+      font-weight: 600;
+      text-align: center;
+    }
   }
   p {
     padding: 1%;
@@ -527,7 +523,7 @@ body {
   margin: 1%;
   max-width: 25em;
   height: 4.9vh;
-  overflow: scroll;
+  overflow: auto;
   text-wrap: revert;
 
   color: #ababab;
@@ -561,8 +557,6 @@ body {
   }
 }
 
-
-
 .css-1973x7a-MuiPickersInputBase-root-MuiPickersOutlinedInput-root {
   border-color: #1a73e8 !important;
   border-width: 2px !important;
@@ -573,16 +567,18 @@ body {
 .login {
   grid-column: 5 /9;
   grid-row: 4 /9;
-  background-color: #006eff3b;
   width: 100%;
   height: 100%;
-
+  background: rgba(255, 255, 255, 0.2); /* must be semi-transparent */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 1em;
+   text-align:  center;
 }
 .inputcom {
   margin: 1%;
   padding: 1%;
-
+  text-align: left;
   width: 95%;
   height: 8vh;
   border-radius: 10px;
@@ -590,12 +586,11 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   label {
-    color: var(--celestial-blue);
+    color: black;
     align-self: center;
     margin-left: 2%;
     width: 100%;
     font-size: small;
-    text-decoration: underline;
     font-weight: 600;
   }
   input {
@@ -606,7 +601,7 @@ body {
     padding: 1%;
     margin: 1%;
     border-radius: 10px;
-    color: var(--celestial-blue);
+    color: black;
   }
   input:focus {
     outline: var(--celestial-blue) 2px solid;
@@ -666,94 +661,87 @@ body {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .tableofproject {
   grid-row: 1/22;
   grid-column: 1/22;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .tablebutton {
   margin: 1%;
-   padding: 1%;
+  padding: 1%;
   button {
-     svg{
+    svg {
       font-size: 17px !important;
-
-     }
-      height: 2em;
-     margin: 1%;
-   padding: 1%;
-     min-width: 3em!important;
+    }
+    height: 2em;
+    margin: 1%;
+    padding: 1%;
+    min-width: 3em !important;
     justify-content: center;
   }
 }
 .cardbutton {
-margin-right: 1%;
+  margin-right: 1%;
   button {
-     svg{
+    svg {
       font-size: 15px !important;
-
-     }
-      height: 2.5em;
-     margin: 1%;
-   padding: 1%;
-     min-width: 3em!important;
+    }
+    height: 2.5em;
+    margin: 1%;
+    padding: 1%;
+    min-width: 3em !important;
     justify-content: center;
   }
 }
-.addbuttonofproject{
+.addbuttonofproject {
   grid-row: 1/2;
-  padding:1em;
+  padding: 1em;
   grid-column: 21/22;
   font-size: 1.5em !important;
   padding: 0 !important;
   margin: 0.3em 0.3em 0 0 !important;
-   
-  button{
-       
-     padding: 0 !important;
-  margin: 0 !important;
-  width: 20%;
+
+  button {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 20%;
   }
-  svg{
+  svg {
     font-size: small;
   }
 }
-.actionbox{
+.actionbox {
   display: flex;
   justify-content: space-around;
   width: min-content;
 }
-.empty{
-   margin: 4em 0em 0 15em;
-    font-size: xx-large;
-    color: darkgrey;
-  
+.empty {
+  margin: 4em 0em 0 15em;
+  font-size: xx-large;
+  color: darkgrey;
 }
-.filterproject{
+.filterproject {
   grid-row: 4/6;
 
   grid-column: 1/ 5;
   display: flex;
   justify-content: space-around;
   align-items: center;
-    margin-bottom: 1em;
-
+  margin-bottom: 1em;
 }
-.filtertasklistview{
+.filtertasklistview {
   grid-row: 4/6;
 
   grid-column: 5/ 8;
   display: flex;
   justify-content: space-around;
   align-items: center;
-      margin-bottom: 1em;
-   
-  }
+  margin-bottom: 1em;
+}
 
-
-.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   padding-right: 0 !important;
 }
 .endspace {
@@ -765,14 +753,14 @@ margin-right: 1%;
   text-align: center;
   overflow: hidden;
   border-radius: 100%;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-      margin-left: 0.15em;
-    margin-top: 0.25em;
+  margin-left: 0.15em;
+  margin-top: 0.25em;
 }
 
 .endspace:hover {
@@ -797,13 +785,13 @@ margin-right: 1%;
 .endspace:hover {
   animation: pulse 1.2s infinite;
 }
-.inputforaddboard{
+.inputforaddboard {
   align-self: start;
   width: 98%;
   border: none;
   height: 5%;
-  border-top-left-radius:10px;
-  border-top-right-radius:10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   padding: 1%;
   border: none;
   outline: none;
@@ -812,11 +800,12 @@ margin-right: 1%;
   font-weight: 600;
   font-size: small;
 }
-.inputforaddboard:hover{
+.inputforaddboard:hover {
   border: none;
-   outline: none;
+  outline: none;
 }
 .titelBar {
+  overflow: hidden;
   position: relative;
   display: flex;
   align-items: center;
@@ -830,7 +819,6 @@ margin-right: 1%;
   color: var(--prussian-blue);
   cursor: pointer;
 }
-
 
 .menu-trigger {
   cursor: pointer;
@@ -847,27 +835,56 @@ margin-right: 1%;
   background: white;
   border: 1px solid #ccc;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   padding: 6px 0;
   z-index: 1000;
-  
- button {
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  width: 100%;
-}
-button:hover {
-  background-color: #f5f5f5;
-}
 
-
+  button {
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+  }
+  button:hover {
+    background-color: #f5f5f5;
+  }
 }
-.css-10d30g3-MuiPaper-root-MuiDialog-paper{
-      max-height: fit-content !important;
+.css-10d30g3-MuiPaper-root-MuiDialog-paper {
+  max-height: fit-content !important;
+}
+.error {
+  color: red;
+  font-size: x-small;
+  font-style: oblique;
+  margin: 1%;
+  margin-top: 0.1%;
+}
+.login-button {
+  margin: 1%;
+  button {
+    font-size: x-small;
+    min-width: 50px !important;
+    margin: 1% !important;
+    padding: 1% !important;
+  }
+}
+.loginheading {
+  font-size: large;
+  font-weight: 600;
+  margin: 1%;
+  padding: 1%;
+}
+.appclass {
+  background-image: url("../../resource/bgLogin.png");
+  background-size: cover;
+  background-position: center;
+}
+.logout{
+  margin: 1%;
+  font-size: small;
 }

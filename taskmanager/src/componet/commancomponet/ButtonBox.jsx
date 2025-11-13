@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import DeleteBox from '../dialogbox/DeleteBox'
 export default function ButtonBox({
   onClickFunction,
   value,
@@ -10,14 +10,21 @@ export default function ButtonBox({
   editIcon,
   deleteIcon,
   type,
+  disabled,
+  size,
+  variant,
+  
 }) {
+
   return (
     <div className={stylename}>
       <Button
+        disabled={disabled}
         sx={{ fontSize: "1em" }}
-        variant="contained"
+        variant= {variant ?? "contained"}
         onClick={onClickFunction}
         type={type}
+        size={size}
       >
          {
           editIcon ? (
@@ -28,6 +35,7 @@ export default function ButtonBox({
         }
         {value}
       </Button>
+
     </div>
   );
 }

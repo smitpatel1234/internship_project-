@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setChangeInCurrentUser } from "../../features/currentUser/currentUserSlice";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { userSchema } from "../../features/validator/loginSchema";
+import { setChange } from "../../features/Todolist/taskSlice";
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,26 +14,34 @@ export default function Login() {
   const currentUser = useSelector(
     (state) => state.currentUserStore.currentUser
   );
-  const error = useSelector((state) => state.currentUserStore.error);
-  
+  const error = useSelector((state) => state.currentUserStore.currentUser.error);
+
 
   const onSubmit = (values, { setSubmitting }) => {
-      console.log("values", values);
     const { username, email } = values;
     const user = userlist.find((user) => {
       return user.username === username && user.email === email;
     });
-    const isvalid = userlist.some(
-      (user) => user.username === username && user.email === email
-    );
-    dispatch(setChangeInCurrentUser(user ?? { username:username, email:email}));
-    if (isvalid) {
+ 
+    if (user) {
+      dispatch(setChangeInCurrentUser(user));
+      dispatch(setChangeInCurrentUser({error:{}}))
+       dispatch(
+         setChange({  assigTo:user.id,
+               assignBy:user.id,
+          createdBy:user.id})
+       )
+     
       navigate("/dashboardlayout/dashboard");
     } else {
-       dispatch(setChangeInCurrentUser({ error:{
-        message:"Invalid username or email",
-        Status:401
-        }}));
+      dispatch(
+        setChangeInCurrentUser({
+          error: {
+            message: "Invalid username or email",
+            Status: 401,
+          },
+        })
+      );
     }
     setSubmitting(false);
   };
@@ -42,30 +51,34 @@ export default function Login() {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={userSchema}
-    >
-      {({ isValid, dirty, isSubmitting }) => (
-        <Form>
-          <div className="form-control">
-            <label htmlFor="email">Email</label>
-            <Field type="email" id="email" name="email" />
-            <ErrorMessage name="email" component="div" className="error" />
-          </div>
-          <div className="form-control">
-            <label htmlFor="username">Username</label>
-            <Field type="text" id="username" name="username" />
-            <ErrorMessage name="username" component="div" className="error" />
-          </div>
+    <div className="login">
+      <Formik
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        validationSchema={userSchema}
+      >
+        {({ isValid, dirty, isSubmitting }) => (
+          <Form>
+            <div className="loginheading">Login</div>
+            <Inputbox
+              label="Username"
+              type="text"
+              id="username"
+              name="username"
+            />
+            <Inputbox label="Email" type="email" id="email" name="email" />
+            <Buttonbox
+              size="small"
+              type="submit"
+              disabled={isSubmitting || !isValid}
+              value={"Save"}
+              stylename={"login-button"}
+            />
 
-          <button type="submit" disabled={isSubmitting || !isValid}>
-            Submit
-          </button>
-          <div>{currentUser.error?.message}</div>
-        </Form>
-      )}
-    </Formik>
+            <div className="error">{currentUser.error?.message}</div>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }

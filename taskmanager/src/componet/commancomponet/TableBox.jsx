@@ -34,11 +34,12 @@ export default function TableBox({
                 {headingdata.map((data) =>
                   data.title != "action" ? (
                     <TableCell key={`${row.id}-${data.key}`}>
-                      {row[data.key]}
+                      {row[data.key] ?? ""}
                     </TableCell>
                   ) : (
                     <TableCell key={`${row.id}-${data.key}`}>
                       <div className="actionbox">
+                        
                         {editIcon && (
                           <ButtonBox
                             editIcon

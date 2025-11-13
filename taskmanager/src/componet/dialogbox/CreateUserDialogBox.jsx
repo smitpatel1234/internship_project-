@@ -4,10 +4,12 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  MenuItem,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { setChangeInUser } from "../../features/Todolist/userSlice";
 import InputTextInDialog from "./InputTextInDialog";
+import SelectBox from "../commancomponet/SelectBox";
 
 
 function CrateUserDialog({ open, onClose, onSave ,title}) {
@@ -50,13 +52,15 @@ function CrateUserDialog({ open, onClose, onSave ,title}) {
             name={"password"}
             handleChange={handleChange}
           />
-          <InputTextInDialog
+          <SelectBox
             value={user?.roleId ?? ""}
             name={"roleId"}
-            states={rolelist}
             required={true}
+            label={"roleId"}
             handleChange={handleChange}
-          />
+          >
+          {rolelist.map((role)=>(<MenuItem value={role.id}>{role.name} </MenuItem>))  }
+          </SelectBox>
         </DialogContent>
         <DialogActions className="dialogtitle">
           <Button onClick={onSave} color="primary" className="dialogtitletext" variant="outlined">

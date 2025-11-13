@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
+
 const boardSlice =  createSlice({
     name:"boardStore",
     initialState:{
@@ -11,7 +13,7 @@ const boardSlice =  createSlice({
     },
     reducers:{
         addBoard:(state,action)=>{
-            state.board.id=new Date().getTime();
+            state.board.id=uuidv4();
             const newBoard= { ...state.board};
             state.boardList.push(newBoard);
         },
@@ -22,9 +24,9 @@ const boardSlice =  createSlice({
             state.boardList=state.boardList.filter(board=>board.id !== action.payload.id);
         },
         editBoard:(state,action)=>{
-            const index = state.boardList.findIndex(board=>board.id === action.payload.id);
+            const index = state.boardList.findIndex(board=>board.id === state.board.id);
             if(index !== -1){
-                state.boardList[index] = { ...state.boardList[index], ...action.payload};
+                state.boardList[index] = { ...state.boardList[index], ...state.board};
             }
         }
           

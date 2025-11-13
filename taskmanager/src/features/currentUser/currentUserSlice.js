@@ -9,16 +9,14 @@ const currentUserSlice = createSlice({
       email: null,
       password: null,
       roleId: null,
+      error: { },
     },
-    isvalidUser: false,
-    error: { },
+    
   },
 
   reducers: {
     setChangeInCurrentUser: (state, actions) => {
-      console.log("payload in current user slice", actions.payload);
       state.currentUser ={...state.currentUser ,...actions.payload};
-      state.error = actions.payload.error || {};
     },
 
     removeCurrentUser: (state, actions) => {
@@ -38,6 +36,8 @@ const currentUserSlice = createSlice({
         edituser.email = email;
         edituser.password = password;
         edituser.roleId = roleId;
+        edituser.isvalidUser= false;
+        edituser.error= { };
       }
     },
   },

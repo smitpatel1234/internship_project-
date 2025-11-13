@@ -9,11 +9,12 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ButtonBox from '../commancomponet/ButtonBox'
+import ComponentHider from "../Middelware/ComponentHider";
+import DeleteBox from "../dialogbox/DeleteBox";
 export default function Taskcard({ task, id }) {
   const [EditDialog, setEditDialog] = React.useState(false);
   const dispatch = useDispatch();
 
-  // Make individual task sortable
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -22,15 +23,25 @@ export default function Taskcard({ task, id }) {
     transition,
     zIndex: transform ? 1000 : "auto",
   };
-
+  
   const openDialogbox = () => {
     setEditDialog(true);
     dispatch(setChange({ ...task, id: task.id }));
   };
-
+   const [openDelete, setopenDelet] = React.useState(false);
+  
+    const handleCloseDelete = () => {
+      setopenDelet(false);
+    };
+    const handleDeleteDailog = (id) => {
+      setChange({ id: id });
+      setopenDelet(true);
+    };
+    const handelDelete =()=>{
+     dispatch(removeTask(task.id))
+    }
   return (
     <div className="taskcard" ref={setNodeRef} style={style} >
-      {/* Only the title div is draggable */}
       <div className="tasktitlediv" {...attributes} {...listeners}>
         <p style={{ overflow: "hidden" }}>{task.title}</p>
         <div className="taskstateindicator">
@@ -40,17 +51,20 @@ export default function Taskcard({ task, id }) {
       <div className="taskDisDiv">{task.description}</div>
 
       <div className="task-footer">
+        <ComponentHider ComponentId={9}>
         <ButtonBox
           editIcon={true}
           onClickFunction={openDialogbox}
           stylename="cardbutton"
         />
-
+</ComponentHider>
+   <ComponentHider c ComponentId={8}>
         <ButtonBox
           stylename="cardbutton"
           deleteIcon={true}
-          onClickFunction={() => dispatch(removeTask(task.id))}
+          onClickFunction={handleDeleteDailog}
         />
+        </ComponentHider>
         <span style={{ flexGrow: "1" }} />
         
         <div className="task-date">
@@ -58,7 +72,12 @@ export default function Taskcard({ task, id }) {
           {task.date}
         </div>
       </div>
-
+      <DeleteBox
+             open={openDelete}
+             handleCloseDelete={handleCloseDelete}
+             handleDelete={handelDelete}
+           />
+      
       <CreateTaskDialog
         title={"Edit Task"}
         open={EditDialog}

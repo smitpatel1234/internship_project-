@@ -1,4 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice,createSelector } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
+
+const tasks = (state)=>(state.taskStore.tasks) 
+const currentUser = (state)=>(state.currentUserStore.currentUser)
+const GET_TASK = createSelector([tasks,currentUser],(tasks,currentUser)=>(
+   tasks.filter((task)=>(task.createdBy==currentUser.id || task.assigTo==currentUser.id || 
+ task.assigBY==currentUser.id
+  ))
+))
+const GET_PROJECTS = createSelector([GET_TASK],(GET_TASK)=>(
+   new Set(GET_TASK.map((task)=>task.projectId)))
+)
+
+
 
 const taskSlice = createSlice({
   name: "taskStore",
@@ -12,6 +26,7 @@ const taskSlice = createSlice({
         state:null,
         description:null,
         date:null,
+        createdBy:null,
         assigTo:null,
         assignBy:null,
         projectId:null,
@@ -21,22 +36,20 @@ const taskSlice = createSlice({
   reducers: {
 
   
-  setChange:(state,actions) =>{
-    console.log(actions.payload);
-    
+  setChange:(state,actions) =>{    
     state.task = {...state.task, ...actions.payload}
   },
     addTask: (state,actions) => {
-      state.task.id =  Math.random()*100000000;
+      state.task.id =  uuidv4();
       const newTask = { ...state.task };
       state.tasks.push(newTask);
     },
     removeTask: (state, actions) => {
-      state.tasks = state.tasks.filter((task) => task.id !== +actions.payload);
+      state.tasks = state.tasks.filter((task) => task.id != actions.payload);
     },
     moveTask: (state, actions) => {
       const { fromIndex, toIndex } = actions.payload;
-      if (fromIndex === undefined || toIndex === undefined)
+      if (fromIndex == undefined || toIndex == undefined)
          return;
       const tasks = state.tasks;
       if (fromIndex < 0 || fromIndex >= tasks.length)
@@ -48,7 +61,7 @@ const taskSlice = createSlice({
       tasks.splice(dest, 0, moved);
     },
     changeStatus: (state, actions) => {
-      const task = state.tasks.find((task) => task.id === +actions.payload.id);
+      const task = state.tasks.find((task) => task.id == actions.payload.id);
       if (task) {
         task.state = actions.payload.state;
       }
@@ -56,7 +69,7 @@ const taskSlice = createSlice({
     editTask: (state, actions) => {
 
       const { id, title, description, state: newState,date, assigTo, assignBy, projectId } = state.task;
-      const task = state.tasks.find((task) => +task.id === +id);
+      const task = state.tasks.find((task) => task.id == id);
       if (task) {
         task.title = title;
         task.description = description;
@@ -71,3 +84,4 @@ const taskSlice = createSlice({
 
 export const { addTask, removeTask, changeStatus, editTask,setChange,moveTask} = taskSlice.actions;
 export default taskSlice.reducer;
+export {GET_TASK,GET_PROJECTS};

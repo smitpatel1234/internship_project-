@@ -49,7 +49,7 @@ function toCamelCase(str) {
 }
 
 // ✅ Main Component
-export default function InputTextInDialog({ value, name, states, required,handleChange , sx}) {
+export default function InputTextInDialog({ value, name, required,handleChange , sx }) {
 
 
   const isDescription = name?.toLowerCase().includes("description");
@@ -68,19 +68,11 @@ export default function InputTextInDialog({ value, name, states, required,handle
           name={name}
           value={value}
           onChange={handleChange}
-          select={!!states}
           required={required}
           multiline={isDescription}
           minRows={isDescription ? 3 : 1}
           maxRows={isDescription ? 6 : 1}
-        >
-          {states?.map((s) => (
-                <MenuItem key={s.id} value={s.id}>
-                     {s.username || s.name}
-                 </MenuItem>
-))}
-
-            
+        >   
         </TextField>
       
     </ThemeProvider>
