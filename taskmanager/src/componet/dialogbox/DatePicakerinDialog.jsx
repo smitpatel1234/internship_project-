@@ -13,38 +13,38 @@ export function todaysdate() {
   return `${now.getMonth() + 1}-${now.getDate()}-${now.getFullYear()}`;
 }
 
+
 const theme = createTheme({
   palette: { primary: { main: blue[500] } },
 });
 
-export default function DatePicakerinDialog({ value, required }) {
+export default function DatePicakerinDialog({ value, required ,formik }) {
   const dispatch = useDispatch();
-  const parsedValue = value ? dayjs(value) : dayjs(todaysdate());
+  const parsedValue = formik.values['date'] ? dayjs(formik.values['date']) : dayjs(todaysdate());
+ 
 
-  const handleChangeInDate = (newValue) => {
-    dispatch(setChange({ date: newValue ? newValue.format("YYYY-MM-DD") : null }));
-  };
 
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} >
         <DatePicker
+          className="date"
           margin='normal'
           label="Select Date"
           value={parsedValue}
-          onChange={handleChangeInDate}
+          onChange={formik.handleChange}
           required={!!required}
           format="MM/DD/YYYY"
           slotProps={{
             textField: {
               fullWidth: true,
               helperText: "MM/DD/YYYY",
-              InputLabelProps: { shrink: true }, // ✅ force label to float above outline
+              InputLabelProps: { shrink: true },
               sx: {
                 "& .MuiOutlinedInput-root, & .MuiPickersOutlinedInput-root": {
                   borderRadius: 2,
                   backgroundColor: "#f9f9f9",
-                  padding: "0px 12px", // proper padding for text inside outline
+                  padding: "0px 12px", 
 
                   "& .MuiOutlinedInput-notchedOutline, & fieldset": {
                     borderColor: `${blue[400]} !important`,

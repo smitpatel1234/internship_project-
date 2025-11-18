@@ -8,9 +8,11 @@ import {
 } from "../../features/Todolist/taskSlice";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ButtonBox from '../commancomponet/ButtonBox'
+import ButtonBox from "../commancomponet/ButtonBox";
 import ComponentHider from "../Middelware/ComponentHider";
 import DeleteBox from "../dialogbox/DeleteBox";
+import { showSnackbar } from "../../features/Todolist/snackbarSlice";
+
 export default function Taskcard({ task, id }) {
   const [EditDialog, setEditDialog] = React.useState(false);
   const dispatch = useDispatch();
@@ -23,25 +25,47 @@ export default function Taskcard({ task, id }) {
     transition,
     zIndex: transform ? 1000 : "auto",
   };
-  
-  const openDialogbox = () => {
+
+  const openDialogbox = async () => {
+    await dispatch(setChange({ ...task, id: task.id }));
     setEditDialog(true);
-    dispatch(setChange({ ...task, id: task.id }));
   };
-   const [openDelete, setopenDelet] = React.useState(false);
-  
-    const handleCloseDelete = () => {
-      setopenDelet(false);
-    };
-    const handleDeleteDailog = (id) => {
-      setChange({ id: id });
-      setopenDelet(true);
-    };
-    const handelDelete =()=>{
-     dispatch(removeTask(task.id))
-    }
+  const [openDelete, setopenDelet] = React.useState(false);
+
+  const handleCloseDelete = () => {
+    setopenDelet(false);
+  };
+  const handleDeleteDailog = (id) => {
+    setChange({ id: id });
+
+    setopenDelet(true);
+  };
+  const handelDelete = () => {
+
+    dispatch(removeTask(task.id));
+        dispatch(
+      showSnackbar({
+        message: "task deleted successfully!",
+        severity: "success",
+      })
+    );
+  };
+  const  handelTaskEdit = () => {
+          dispatch(editTask());
+          dispatch(showSnackbar({
+        message: "task edited successfully!",
+        severity: "success",
+      }))
+          
+          setEditDialog(false);
+
+        }
+ const  handelTaskDialog = ()=>{
+  setEditDialog(false);
+
+  }
   return (
-    <div className="taskcard" ref={setNodeRef} style={style} >
+    <div className="taskcard" ref={setNodeRef} style={style}>
       <div className="tasktitlediv" {...attributes} {...listeners}>
         <p style={{ overflow: "hidden" }}>{task.title}</p>
         <div className="taskstateindicator">
@@ -52,42 +76,37 @@ export default function Taskcard({ task, id }) {
 
       <div className="task-footer">
         <ComponentHider ComponentId={9}>
-        <ButtonBox
-          editIcon={true}
-          onClickFunction={openDialogbox}
-          stylename="cardbutton"
-        />
-</ComponentHider>
-   <ComponentHider c ComponentId={8}>
-        <ButtonBox
-          stylename="cardbutton"
-          deleteIcon={true}
-          onClickFunction={handleDeleteDailog}
-        />
+          <ButtonBox
+            editIcon={true}
+            onClickFunction={openDialogbox}
+            stylename="cardbutton"
+          />
+        </ComponentHider>
+        <ComponentHider c ComponentId={8}>
+          <ButtonBox
+            stylename="cardbutton"
+            deleteIcon={true}
+            onClickFunction={handleDeleteDailog}
+          />
         </ComponentHider>
         <span style={{ flexGrow: "1" }} />
-        
+
         <div className="task-date">
           <i className="fa-regular fa-clock"></i>
           {task.date}
         </div>
       </div>
       <DeleteBox
-             open={openDelete}
-             handleCloseDelete={handleCloseDelete}
-             handleDelete={handelDelete}
-           />
-      
+        open={openDelete}
+        handleCloseDelete={handleCloseDelete}
+        handleDelete={handelDelete}
+      />
+
       <CreateTaskDialog
-        title={"Edit Task"}
+        titleName={"Edit Task"}
         open={EditDialog}
-        onClose={() => {
-          setEditDialog(false);
-        }}
-        onSave={() => {
-          dispatch(editTask());
-          setEditDialog(false);
-        }}
+        onClose={handelTaskDialog}
+        onSave={handelTaskEdit}
       />
     </div>
   );

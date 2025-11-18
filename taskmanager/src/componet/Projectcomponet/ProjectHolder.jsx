@@ -10,29 +10,43 @@ import {
 import { usePermissionChecker } from "../Middelware/ComponentHider";
 import DeleteBox from "../dialogbox/DeleteBox";
 import { GET_PROJECTS } from "../../features/Todolist/projectSlice";
-import {saveUserAndProjectListChanges,restoreSavedUser } from '../../features/Todolist/userAndProjectSlice'
+import {
+  saveUserAndProjectListChanges,
+  restoreSavedUser,
+} from "../../features/Todolist/userAndProjectSlice";
+import { showSnackbar } from "../../features/Todolist/snackbarSlice";
 
 function ProjectHolder({ search }) {
+  const currentUser = useSelector(
+    (state) => state.currentUserStore.currentUser
+  );
+  console.log(search);
+
   const [column, setColumn] = useState([
     {
       title: "id",
       key: "id",
+      width: "10%",
     },
     {
       title: "title",
       key: "title",
+      width: "20%",
     },
     {
       title: "description",
       key: "description",
+      width: "30%",
     },
     {
       title: "manageby",
       key: "managebyName",
+      width: "20%",
     },
     {
       title: "action",
       key: "action",
+      width: "10%",
     },
   ]);
   const canEdit = usePermissionChecker(3);
@@ -57,8 +71,7 @@ function ProjectHolder({ search }) {
     setopenDelet(false);
   };
   const handleDeleteDailog = (data) => {
-   
-    dispatch(setChangeInProject({id:data}));
+    dispatch(setChangeInProject({ id: data }));
     setopenDelet(true);
   };
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -76,22 +89,33 @@ function ProjectHolder({ search }) {
 
   const handelOpenDialog = (data) => {
     dispatch(setChangeInProject(data));
-     dispatch(restoreSavedUser())
+    dispatch(restoreSavedUser());
     setOpenDialog(true);
   };
   const handelCloseDialog = () => {
-    dispatch(restoreSavedUser())
+    dispatch(restoreSavedUser());
     setOpenDialog(false);
   };
   const handelsave = () => {
-    dispatch(editProject());
-    
+    dispatch(editProject({ updateBy: currentUser.id }));
+    dispatch(
+      showSnackbar({
+        message: "Project edited successfully!",
+        severity: "success",
+      })
+    );
     setOpenDialog(false);
   };
   const handelDelete = () => {
+
     dispatch(removeProject());
+    dispatch(
+      showSnackbar({
+        message: "Project deleted successfully!",
+        severity: "success",
+      })
+    );
     handleCloseDelete();
-    
   };
 
   return (
@@ -107,7 +131,7 @@ function ProjectHolder({ search }) {
       />
 
       <CrateProjectDialog
-        title={"Edit Project"}
+        titleName={"Edit Project"}
         onClose={handelCloseDialog}
         onSave={handelsave}
         open={openDialog}

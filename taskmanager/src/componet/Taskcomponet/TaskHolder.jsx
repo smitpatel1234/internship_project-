@@ -13,6 +13,8 @@ import MenuItemBox from "../commancomponet/MenuItemBox";
 import DeleteBox from "../dialogbox/DeleteBox";
 import ComponentHider, { usePermissionChecker } from "../Middelware/ComponentHider";
 import { GET_TASK } from "../../features/Todolist/taskSlice";
+import { showSnackbar} from '../../features/Todolist/snackbarSlice'
+
 export function todaysdate() {
   let now = new Date(Date.now());
   let year = now.getFullYear();
@@ -43,18 +45,31 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
 
   const handleEdit = () => {
     dispatch(changeBoard({ id: barId }));
+    
     setOpen(true);
 
   };
  
   const handleDel = () => {
     dispatch(removeBoard({ id: barId }));
+         dispatch(
+          showSnackbar({
+            message: "Board deleted successfully!",
+            severity: "success",
+          })
+        );
 
   };
 
   function onSaveCall() {
     
     dispatch(addTask());
+         dispatch(
+          showSnackbar({
+            message: "task created successfully!",
+            severity: "success",
+          })
+        );
     setOpenDialog(false);
 
   }
@@ -69,6 +84,7 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
         date: todaysdate(),
       })
     );
+
     setOpenDialog(true);
   };
 
@@ -81,7 +97,6 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
 
   return (
     <div className="taskHolder">
-      {/* Column title bar - draggable for column reordering */}
       <div className="titelBar">
         <span {...attributes} {...listeners} style={{ cursor: "grab" ,overflow:"hidden"}}>
           {barname}
@@ -126,7 +141,7 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
         </SortableContext>
       </div>
       <CreateTaskDialog
-        title={"Create Task"}
+        titleName={"Create Task"}
         open={openDialog}
         onClose={() => setOpenDialog(false)}
         onSave={onSaveCall}

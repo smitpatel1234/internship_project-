@@ -3,28 +3,32 @@ import ProjectHolder from "../Projectcomponet/ProjectHolder";
 import Searchbar from "../commancomponet/Searchbar";
 import ButtonBox from "../commancomponet/ButtonBox";
 import CrateProjectDialog from "../dialogbox/CrateProjectDialog";
-import {  useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addProject,
   setChangeInProject,
 } from "../../features/Todolist/projectSlice";
 import ComponentHider from "../Middelware/ComponentHider";
-import { v4 as uuidv4 } from 'uuid';
+import { showSnackbar} from '../../features/Todolist/snackbarSlice'
+import { v4 as uuidv4 } from "uuid";
 
 function Project() {
+  const currentUser = useSelector(
+    (state) => state.currentUserStore.currentUser
+  );
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
   const [search, setSearch] = React.useState("");
-  const handelsearch = (e) => {
-    setSearch(e.target.value);
+  const handelsearch = (value) => {
+    setSearch(value);
   };
+
   const handelOpenDialog = () => {
     dispatch(
       setChangeInProject({
-        id:'',
-        title: "",
-        description: "",
-        manageBy: null,
+        id: null,
+        title: null,
+        description: null,
       })
     );
 
@@ -34,30 +38,38 @@ function Project() {
     setOpenDialog(false);
   };
   const handelsave = () => {
-    dispatch(addProject());
+    dispatch(
+      addProject({ createdBy: currentUser.id, updateBy: currentUser.id })
+    );
+    dispatch(
+      showSnackbar({
+        message: "Project created successfully!",
+        severity: "success",
+      })
+    );
 
+    setOpenDialog(false);
   };
   return (
     <div className="main">
       <div className="taskslide">
-         <ComponentHider ComponentId={2}>
-        <ButtonBox
-          onClickFunction={handelOpenDialog}
-          value="+"
-          stylename="addbuttonofproject"
-        />
+        <ComponentHider ComponentId={2}>
+          <ButtonBox
+            onClickFunction={handelOpenDialog}
+            value="+"
+            stylename="addbuttonofproject"
+          />
         </ComponentHider>
         <div className="overview">
           <h2>
-           
             project
             <ComponentHider ComponentId={3}>
-            <CrateProjectDialog
-              title="Create Project"
-              onClose={handelCloseDialog}
-              onSave={handelsave}
-              open={openDialog}
-            />
+              <CrateProjectDialog
+                titleName="Create Project"
+                onClose={handelCloseDialog}
+                onSave={handelsave}
+                open={openDialog}
+              />
             </ComponentHider>
           </h2>
           <p>Edit and modify the User as you want</p>
@@ -66,11 +78,11 @@ function Project() {
           <hr className="lineofhr" />
         </div>
 
-        <Searchbar handleChange={handelsearch} search={search} />
+        <Searchbar handleChange={handelsearch} />
 
         <div className="project">
           <ComponentHider ComponentId={14}>
-          <ProjectHolder search={search} />
+            <ProjectHolder search={search} />
           </ComponentHider>
         </div>
       </div>

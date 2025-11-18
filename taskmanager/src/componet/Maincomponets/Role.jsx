@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import RoleHolder from '../rolecomponent/RoleHolder'
 import ButtonBox from '../commancomponet/ButtonBox'
 import Searchbar from '../commancomponet/Searchbar'
-
+import ComponentHider from '../Middelware/ComponentHider'
 import { saveRoleAndPermissionChanges } from '../../features/Todolist/roleAndPermissionSlice'
 
 function Role() {
@@ -14,6 +14,7 @@ function Role() {
   }
 
   return (
+    <ComponentHider ComponentId={42} >
     <div className='main'>
       <div className="taskslide">
         <div className="overview">
@@ -29,6 +30,7 @@ function Role() {
         </div>
       </div>
     </div>
+    </ComponentHider>
   )
 }
 

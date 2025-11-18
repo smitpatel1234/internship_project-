@@ -17,42 +17,56 @@ import ComponentHider from "../Middelware/ComponentHider";
 import { GET_PROJECTS, GET_TASK } from "../../features/Todolist/taskSlice";
 import { usePermissionChecker } from "../Middelware/ComponentHider";
 import { GET_USER_PROJECTS } from "../../features/Todolist/userAndProjectSlice";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 function Dashboard() {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.taskStore.tasks);
   const task = useSelector((state) => state.taskStore.task);
-  const currentProject = task?.projectId ?? "";
-  const get_project = Array.from(useSelector(GET_PROJECTS) || []);
-  const get_task = useSelector(GET_TASK) || [];
+  const currentProject = task?.projectId;
   const boardList = useSelector((state) => state.boardStore.boardList);
-  const boards =useMemo(()=> boardList.filter(
-    (board) => board.projectId === currentProject
-  ),[boardList,currentProject]);
-    
-  
-  
+  const boards = useMemo(
+    () => boardList.filter((board) => board.projectId === currentProject),
+    [boardList, currentProject]
+  );
 
-  const hasTaskPermission = usePermissionChecker(2);
+  const projectList = useSelector(GET_USER_PROJECTS);
 
-const projectList = useSelector(GET_USER_PROJECTS)
 
-  const taskList = hasTaskPermission
-    ? get_task
-    : get_task.filter((t) => get_project.includes(t.projectId));
- //
   const [taskStateColumn, setTaskStateColumn] = useState(boards);
 
+  const MIN_BOARD_NAME = 2;
+  const boardFormik = useFormik({
+    initialValues: { name: "" },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .trim()
+        .min(MIN_BOARD_NAME, `Minimum ${MIN_BOARD_NAME} characters required`)
+        .required("Board name is required")
+        .test("unique-Board name", "This Board name is already allocated", (value) => {
+          return !boardList.some((board) => board.name === value);
+        }),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      const boardName = values.name.trim();
+      dispatch(changeBoard({ name: boardName, projectId: currentProject }));
+      dispatch(addBoard());
+      resetForm();
+    },
+  });
 
   const [activeId, setActiveId] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
   const [activeColumn, setActiveColumn] = useState(null);
 
   const handleChangeInBoard = (e) => {
-    dispatch(changeBoard({ [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    dispatch(changeBoard({ [name]: value }));
+    boardFormik.handleChange(e);
   };
 
   const handleAddBoard = () => {
-    dispatch(addBoard());
+    boardFormik.handleSubmit();
   };
 
   const handleChange = (e) => {
@@ -60,17 +74,15 @@ const projectList = useSelector(GET_USER_PROJECTS)
     dispatch(changeBoard({ [e.target.name]: e.target.value }));
   };
 
-// setting up the first element of projectList
   useEffect(() => {
-    if (!task?.projectId && projectList.length > 0) {
+    if (projectList.length > 0) {
       const defaultProject = projectList[0];
       dispatch(setChange({ projectId: defaultProject.id }));
     }
-  }, []);
-  useEffect(()=>{
-setTaskStateColumn(boards)
-console.log(boards)
-  },[boards])
+  }, [projectList]);
+  useEffect(() => {
+    setTaskStateColumn(boards);
+  }, [boards]);
 
   //logic of drag and drop
   const handleDragStart = (event) => {
@@ -188,9 +200,10 @@ console.log(boards)
           </div>
 
           <div className="filtertasklistview">
-            <SelectBox
-             value={"Board View"}>
-              <MenuItem selected value={"List View"}>List View</MenuItem>
+            <SelectBox value={"Board View"}>
+              <MenuItem selected value={"List View"}>
+                List View
+              </MenuItem>
               <MenuItem value={"Board View"}>Board View</MenuItem>
             </SelectBox>
           </div>
@@ -207,7 +220,12 @@ console.log(boards)
               >
                 {taskStateColumn.map((col) => (
                   <SortableTaskHolder id={String(col.id)} key={col.id}>
-                    <TaskHolder barname={col.name || col.id} barId={col.id} setTaskStateColumn={setTaskStateColumn} taskStateColumn={boards} />
+                    <TaskHolder
+                      barname={col.name || col.id}
+                      barId={col.id}
+                      setTaskStateColumn={setTaskStateColumn}
+                      taskStateColumn={boards}
+                    />
                   </SortableTaskHolder>
                 ))}
               </SortableContext>
@@ -232,7 +250,6 @@ console.log(boards)
                     }}
                   >
                     <TaskHolder
-                      
                       barname={activeColumn.name || activeColumn.id}
                       barId={activeColumn.id}
                     />
@@ -242,30 +259,56 @@ console.log(boards)
             </DndContext>
 
             <ComponentHider ComponentId={16}>
-              
-                <div
-                  className="taskHolder "
-                  
-                >
-                  
-
+              <div
+                style={{
+                  zIndex: 12,
+                  position: "relative",
+                  cursor: "grab",
+                  width: "100%",
+                }}
+              >
+                <div className="taskHolder">
                   <input
                     type="text"
                     placeholder="Add new column"
-                    required
                     name="name"
                     className="inputforaddboard"
-                    onFocus={(e) => (e.target.placeholder = "")}
-                    onBlur={(e) => (e.target.placeholder = "Add new column")}
+                    value={boardFormik.values.name}
                     onChange={handleChangeInBoard}
+                    onBlur={(e) => {
+                      boardFormik.handleBlur(e);
+                      e.target.placeholder = "Add new column";
+                    }}
+                    onFocus={(e) => (e.target.placeholder = "")}
+                    style={
+                      (boardFormik.touched.name ||
+                        boardFormik.submitCount > 0) &&
+                      boardFormik.errors.name
+                        ? { borderColor: "#d32f2f" }
+                        : undefined
+                    }
                   />
+
+                  {(boardFormik.touched.name || boardFormik.submitCount > 0) &&
+                    boardFormik.errors.name && (
+                      <p
+                        style={{
+                          color: "#d32f2f",
+                          fontSize: 12,
+                          margin: "4px 12px",
+                        }}
+                      >
+                        {boardFormik.errors.name}
+                      </p>
+                    )}
+                  <div style={{ width: "100%", height: "10vh" }}></div>
                   <div className="taskListSholder">
-                  <div className="endspace" onClick={handleAddBoard}>
-                    +
-                  </div>
+                    <div className="endspace" onClick={handleAddBoard}>
+                      +
+                    </div>
                   </div>
                 </div>
-             
+              </div>
             </ComponentHider>
           </div>
         </ComponentHider>

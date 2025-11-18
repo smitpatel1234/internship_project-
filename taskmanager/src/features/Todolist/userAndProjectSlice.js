@@ -1,11 +1,11 @@
-import { createSlice ,createSelector} from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from 'uuid';
+import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 
 const userAndProjectSlice = createSlice({
   name: "userAndProjectSliceStore",
   initialState: {
-    userAndProjectList: [], 
-    savedUserAndProjectList: [ ] 
+    userAndProjectList: [],
+    savedUserAndProjectList: [],
   },
   reducers: {
     addUserAndProjectList: (state, action) => {
@@ -17,7 +17,7 @@ const userAndProjectSlice = createSlice({
         state.userAndProjectList.push({
           id: uuidv4(),
           userId,
-          projectId
+          projectId,
         });
       }
     },
@@ -30,7 +30,6 @@ const userAndProjectSlice = createSlice({
     },
 
     saveUserAndProjectListChanges: (state) => {
-      
       state.savedUserAndProjectList = [...state.userAndProjectList];
     },
 
@@ -40,7 +39,7 @@ const userAndProjectSlice = createSlice({
 
     restoreSavedUser: (state) => {
       state.userAndProjectList = [...state.savedUserAndProjectList];
-    }
+    },
   },
 });
 
@@ -49,27 +48,29 @@ export const {
   removeUserAndProjectList,
   saveUserAndProjectListChanges,
   clearUserAndProjectList,
-  restoreSavedUser
+  restoreSavedUser,
 } = userAndProjectSlice.actions;
 
 const projectList = (state) => state.projectStore.projectList;
 const mappingList = (state) => state.userAndProjectSliceStore.userAndProjectList;
+const userList = (state) => state.userStore.userList;
 const currentUser = (state) => state.currentUserStore.currentUser;
+const taskStore = (state) => state.taskStore.task;
 
 export const GET_USER_PROJECTS = createSelector(
   [projectList, mappingList, currentUser],
-  (projectList, mappingList, currentUser) => {
+  (projectList, mappingList, currentUser) => { 
     if (!currentUser) return [];
 
     return projectList
       .filter((project) => {
         const isAssigned = mappingList.some(
-          (m) => m.projectId === project.id && m.userId === currentUser.id
+          (m) => m.projectId == project.id && m.userId == currentUser.id
         );
 
         return (
-          project.manageBy === currentUser.id ||
-          project.createdBy === currentUser.id ||
+          project.manageBy == currentUser.id ||
+          project.createdBy == currentUser.id ||
           isAssigned
         );
       })
@@ -77,6 +78,30 @@ export const GET_USER_PROJECTS = createSelector(
         id: project.id,
         title: project.title,
       }));
+  }
+);
+
+export const GET_ASSIGNABLE_USERS_FOR_TASK = createSelector(
+  [mappingList, userList, currentUser, taskStore],
+  (mappingList, userList, currentUser, task) => {
+    if (!task?.projectId || !currentUser) return [];
+
+    const relatedUserIds = mappingList
+      .filter((m) => m.projectId === task.projectId)
+      .map((m) => m.userId);
+
+    if (!relatedUserIds.includes(currentUser.id)) {
+      relatedUserIds.push(currentUser.id);
+    }
+
+    const assignableUsers = userList
+      .filter((user) => relatedUserIds.includes(user.id))
+      .map((user) => ({
+        id: user.id,
+        username: user.username,
+      }));
+
+    return assignableUsers;
   }
 );
 

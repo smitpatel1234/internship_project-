@@ -106,6 +106,17 @@ const permissionSlice = createSlice({
              permission:"REMOVE_USER",
              parentId:31
             },
+             {
+             id:41,
+             permission:"ROLE_MANAGEMENT",
+             parentId:null
+            },
+            {
+             id:42,
+             permission:"ROLE_MANAGEMENT",
+             parentId:41
+            },
+          
           
         ]
      }

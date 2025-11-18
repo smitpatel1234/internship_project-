@@ -12,7 +12,7 @@ const GET_PROJECTS = createSelector(
       const user = userList.find((user) => user.id == project?.manageBy);
       return {
         ...project,
-        managebyName: user.username,
+        managebyName: user?.username,
       };
     }).filter((project)=>(project.manageBy == currentUser.id || currentUser.roleId == 12212));
   }
@@ -46,7 +46,10 @@ const projectSlice = createSlice({
     },
     addProject: (state, actions) => {
       state.project.id = uuidv4()
+      state.project.createdBy=actions.payload.createdBy;
+      state.project.updateBy=actions.payload.updateBy;
       const newProject = { ...state.project };
+      console.log(newProject)
       state.projectList.push(newProject);
     },
     removeProject: (state, actions) => {
@@ -55,12 +58,15 @@ const projectSlice = createSlice({
       );
     },
     editProject: (state, actions) => {
+      
       const { id, title, description, manageBy } = { ...state.project };
       const editproject = state.projectList.find((project) => project.id == id);
+       console.log(editproject)
       if (editproject) {
         editproject.title = title;
         editproject.description = description;
-        editproject.manageBy = manageBy;
+         editproject.manageBy = manageBy;
+        editproject.updateBy = actions.payload.updateBy;
       }
     },
   },

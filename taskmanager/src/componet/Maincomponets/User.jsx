@@ -5,14 +5,16 @@ import CreateUserDialogBox from "../dialogbox/CreateUserDialogBox";
 import {  useDispatch } from "react-redux";
 import { addUser,setChangeInUser } from "../../features/Todolist/userSlice";
 import UserHolder from "../usercomponent/UserHolder";
+import { showSnackbar} from '../../features/Todolist/snackbarSlice'
+
 import ComponentHider from "../Middelware/ComponentHider"
 function User() {
   
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
   const [search, setSearch] = React.useState("");
-    const handelsearch = (e) => {
-    setSearch(e.target.value);
+    const handelsearch = (value) => {
+    setSearch(value);
   };
   const handelOpenDialog = () => {
         dispatch(setChangeInUser({
@@ -28,6 +30,12 @@ function User() {
   };
   const handelsave = () => {
     dispatch(addUser());
+        dispatch(
+      showSnackbar({
+        message: "User created successfully!",
+        severity: "success",
+      }))
+    
     setOpenDialog(false);
   };
 
@@ -46,7 +54,7 @@ function User() {
           <h2>
             User
             <CreateUserDialogBox
-              title={"Create User"}
+              titleName={"Create User"}
               onClose={handelCloseDialog}
               onSave={handelsave}
               open={openDialog}

@@ -666,7 +666,6 @@ body {
 .tableofproject {
   grid-row: 1/22;
   grid-column: 1/22;
-  overflow-y: auto;
 }
 .tablebutton {
   margin: 1%;
@@ -723,13 +722,13 @@ body {
   color: darkgrey;
 }
 .filterproject {
-  grid-row: 4/6;
-
+  grid-row: 3/6;
   grid-column: 1/ 5;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-bottom: 1em;
+  position: relative;
+  width: 98%;
+  margin: 10px;
+  margin-top: 20px;
+  
 }
 .filtertasklistview {
   grid-row: 4/6;
@@ -760,7 +759,6 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-left: 0.15em;
-  margin-top: 0.25em;
 }
 
 .endspace:hover {
@@ -887,4 +885,14 @@ body {
 .logout{
   margin: 1%;
   font-size: small;
+}
+.css-1xtozoh-MuiTableRow-root{
+  color: inherit;
+    display: flex !important;
+    vertical-align: middle;
+    outline: 0;
+}
+.date{
+  width: 98% !important;
+  margin: 1% !important;
 }

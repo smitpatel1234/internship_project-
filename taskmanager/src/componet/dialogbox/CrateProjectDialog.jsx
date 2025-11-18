@@ -22,15 +22,55 @@ import {
   removeUserAndProjectList,
   restoreSavedUser,
   saveUserAndProjectListChanges,
+  clearUserAndProjectList
 } from "../../features/Todolist/userAndProjectSlice";
 import { useState, useEffect } from "react";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 
-function CrateProjectDialog({ open, onClose, onSave, title }) {
+
+function CrateProjectDialog({ open, onClose, onSave, titleName }) {
   const dispatch = useDispatch();
-
   const project = useSelector((state) => state.projectStore.project);
+  const projectList = useSelector((state) => state.projectStore.projectList)
   const userlist = useSelector(GET_USER_ADMIN_PROJECT_MANAGER);
   const luserList = useSelector(GET_USER_DEVELOPER_QA);
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .trim()
+      .min(2, "Title must be at least 2 characters")
+      .required("Title is required").test(
+             'unique-title',
+             'This title is already allocated',
+            (value)=>{
+                return     !projectList.some((pro)=>pro.title === value && pro.id !== project?.id)
+            }
+        ),
+    description: Yup.string().trim().max(100, "Description too long"),
+    manageBy: Yup.string().nullable().required("Project manager is required"),
+    id: Yup.string().nullable(),
+  });
+   const handleChange = (e) => {
+     const { name, value } = e.target;
+     dispatch(setChangeInProject({ [name]: value }));
+     formik.handleChange(e)
+   };
+  const initialValues = {
+    title: project?.title ?? null,
+    description: project?.description ?? null,
+    manageBy: project?.manageBy ?? null,
+  };
+
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
+    validationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      await dispatch(setChangeInProject(values));
+      await onSaveEnd();
+      resetForm({ values: { ...initialValues } });
+    },
+  });
 
   const userAndProjectList = useSelector(
     (state) => state.userAndProjectSliceStore.userAndProjectList
@@ -40,7 +80,8 @@ function CrateProjectDialog({ open, onClose, onSave, title }) {
   );
 
   useEffect(() => {
-    dispatch(restoreSavedUser());
+     titleName.includes("Create") ? dispatch(clearUserAndProjectList()) : dispatch(restoreSavedUser());
+    
   }, [dispatch, savedUserAndProjectList]);
 
   const isChecked = (userId, projectId) =>
@@ -56,11 +97,6 @@ function CrateProjectDialog({ open, onClose, onSave, title }) {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    dispatch(setChangeInProject({ [name]: value }));
-  };
-
   const [selectedUsernames, setSelectedUsernames] = useState([]);
 
   useEffect(() => {
@@ -70,70 +106,71 @@ function CrateProjectDialog({ open, onClose, onSave, title }) {
         .map((u) => u.username);
       setSelectedUsernames(selected);
     }
-  }, [project?.id, luserList, userAndProjectList]); // ✅ fixed dependencies
-
-  // ✅ Update Redux when user selects/deselects items in the dropdown
+  }, [project?.id, luserList, userAndProjectList]);
   const onHandelChangeOnView = (event) => {
     const {
       target: { value },
     } = event;
-    const newSelected =
-      typeof value === "string" ? value.split(",") : value;
+    const newSelected = typeof value === "string" ? value.split(",") : value;
 
     setSelectedUsernames(newSelected);
 
-    // Sync Redux selections with dropdown state
     if (project?.id) {
       luserList.forEach((user) => {
         const shouldBeChecked = newSelected.includes(user.username);
         const isCurrentlyChecked = isChecked(user.id, project.id);
         if (shouldBeChecked && !isCurrentlyChecked) {
-          dispatch(addUserAndProjectList({ userId: user.id, projectId: project.id }));
+          dispatch(
+            addUserAndProjectList({ userId: user.id, projectId: project.id })
+          );
         } else if (!shouldBeChecked && isCurrentlyChecked) {
-          dispatch(removeUserAndProjectList({ userId: user.id, projectId: project.id }));
+          dispatch(
+            removeUserAndProjectList({ userId: user.id, projectId: project.id })
+          );
         }
       });
     }
   };
 
-  const onSaveEnd = () => {
-    dispatch(saveUserAndProjectListChanges());
-    onSave();
+  const onSaveEnd = async () => {
+    await dispatch(saveUserAndProjectListChanges());
+    await onSave();
     setSelectedUsernames([]);
   };
 
   return (
-    <Dialog open={open} onClose={onClose} className="dialogbox">
+    <Dialog
+      open={open}
+      onClose={() => {
+        formik.resetForm({ values: { ...initialValues } });
+        setSelectedUsernames([]);
+        onClose();
+      }}
+      className="dialogbox"
+    >
       <div className="dialogtitle">
-        <DialogTitle className="dialogtitletext">{title}</DialogTitle>
-        <Button onClick={onClose} color="primary">
+        <DialogTitle className="dialogtitletext">{titleName}</DialogTitle>
+        <Button
+          onClick={() => {
+            formik.resetForm({ values: { ...initialValues } });
+            setSelectedUsernames([]);
+            onClose();
+          }}
+          color="primary"
+        >
           &#10060;
         </Button>
       </div>
 
       <DialogContent className="dialogcontent">
         <div className="firstDialogcontainer">
-          <InputTextInDialog
-            value={project?.title ?? ""}
-            name="title"
-            required
-            handleChange={handleChange}
-          />
+          <InputTextInDialog formik={formik} name="title" required />
         </div>
 
-        <InputTextInDialog
-          value={project?.description ?? ""}
-          name="description"
-          handleChange={handleChange}
-        />
+        <InputTextInDialog formik={formik} name="description" />
 
-        <SelectBox
-          value={project?.manageBy ?? ""}
-          name="manageBy"
-          label="manageBy"
-          handleChange={handleChange}
-          required
-        >
+        <SelectBox formik={formik} name="manageBy" label="manageBy" handleChange={handleChange} value={formik.values["manageBy"]}>
+          
           {userlist?.map((s) => (
             <MenuItem key={s.id} value={s.id}>
               {s.username}
@@ -148,6 +185,7 @@ function CrateProjectDialog({ open, onClose, onSave, title }) {
           onHandelChangeOnView={onHandelChangeOnView}
           disabled={!project.id}
         >
+
           {luserList?.map((s) => (
             <MenuItem key={s.id} value={s.username}>
               <Checkbox
@@ -164,12 +202,12 @@ function CrateProjectDialog({ open, onClose, onSave, title }) {
 
       <DialogActions className="dialogtitle">
         <Button
-          onClick={onSaveEnd}
+          onClick={formik.handleSubmit}
           color="primary"
           className="dialogtitletext"
           variant="outlined"
         >
-          Create
+          {titleName.includes("Create") ? "Create" : "Edit"}
         </Button>
       </DialogActions>
     </Dialog>

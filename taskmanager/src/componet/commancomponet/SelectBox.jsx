@@ -4,6 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { blue } from "@mui/material/colors";
+import { Box } from "@mui/material";
  
 export const theme = createTheme({
   palette: {
@@ -58,52 +59,37 @@ export default function SelectBox({
   label,
   styleName,
   children,
-  handleChange,
   name,
   required,
-  value,
-  multiple
+  formik,
+  handleChange,
+  value
 }) {
-  const firstValue = React.Children.toArray(children)[0]?.props?.value ?? "";
-  const [selectedValue, setSelectedValue] = React.useState(value || firstValue);
-
-  React.useEffect(() => {
-    if (!value && firstValue && handleChange) {
-      handleChange({ target: { name, value: firstValue } });
-    }
-  }, []); 
-
-  React.useEffect(() => {
-    if (value !== selectedValue) {
-      setSelectedValue(value);
-    }
-  }, [value]);
-
-  const handleLocalChange = React.useCallback(
-    (e) => {
-      const newValue = e.target.value;
-      setSelectedValue(newValue);
-      handleChange?.(e);
-    },
-    [handleChange]
-    
-  );
+ 
 
   return (
-    <ThemeProvider theme={theme}>
-      <FormControl fullWidth required={required}>
+    <ThemeProvider theme={theme} >
+      <Box>
+      <FormControl fullWidth required={required} sx={{m:"1% 0 0 0 "}}>
         {label && <InputLabel>{label}</InputLabel>}
         <Select
           key={styleName}
           name={name}
+
           label={label}
-          value={selectedValue || ""}
-          onChange={handleLocalChange}
-          multiple={multiple}
+          value={formik?.values[name] ?? value}
+          onChange={formik?.handleChange ?? handleChange}  
+          onBlur={formik?.handleBlur}
         >
           {children}
         </Select>
+         {formik?.touched[name] && formik?.errors[name] && (
+          <p style={{ color: "red", fontSize: 12, marginLeft: 12 }}>
+            {formik?.errors[name]}
+          </p>
+        )}
       </FormControl>
+      </Box>
     </ThemeProvider>
   );
 }

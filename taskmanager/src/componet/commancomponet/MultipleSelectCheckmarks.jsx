@@ -32,7 +32,7 @@ export default function MultipleSelectCheckmarks({ value, name, children ,onHand
           MenuProps={MenuProps}
           onChange={onHandelChangeOnView}
           disabled={disabled}
-         onClick={(e) => e.preventDefault()}
+          onClick={(e) => e.preventDefault()}
         >
           {children}
         </Select>

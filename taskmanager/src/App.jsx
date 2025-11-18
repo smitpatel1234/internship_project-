@@ -8,10 +8,22 @@ import Login from './componet/Maincomponets/Login';
 import DashboardLayout from './componet/Maincomponets/Dashboardlayout';
 import Role from './componet/Maincomponets/Role';
 import PrivateRoutes from './componet/Middelware/PrivateRoutes'
+import { useSelector, useDispatch } from "react-redux";
+import AppSnackbar from "./componet/Maincomponets/AppSnackbar";
+import { hideSnackbar, selectSnackbar } from "./features/Todolist/snackbarSlice";
 export default function App() {
+    const dispatch = useDispatch();
+    const snackbar = useSelector(selectSnackbar);
+
+  
   return (
     <div className="appclass">
-      
+        <AppSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => dispatch(hideSnackbar())}
+      />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route  element={<PrivateRoutes />}>

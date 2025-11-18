@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import TableBox from "../commancomponet/TableBox";
 import CreateUserDialogBox from "../dialogbox/CreateUserDialogBox";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,29 +10,35 @@ import {
 import DeleteBox from "../dialogbox/DeleteBox";
 import { GET_USER } from "../../features/Todolist/userSlice";
 import { usePermissionChecker } from "../Middelware/ComponentHider";
+import { showSnackbar } from "../../features/Todolist/snackbarSlice";
 
 function UserHolder({ search }) {
   const [column, setColumn] = React.useState([
     {
       title: "id",
       key: "id",
+      width: "20%",
     },
     {
       title: "username",
       key: "username",
+      width: "20%",
     },
     {
       title: "email",
       key: "email",
+      width: "20%",
     },
 
     {
       title: "role",
       key: "role",
+      width: "20%",
     },
     {
       title: "action",
       key: "action",
+      width: "20%",
     },
   ]);
   const canEdit = usePermissionChecker(33);
@@ -55,7 +61,7 @@ function UserHolder({ search }) {
     setopenDelet(false);
   };
   const handleDeleteDailog = (data) => {
-    dispatch(setChangeInUser({id:data}));
+    dispatch(setChangeInUser({ id: data }));
     setopenDelet(true);
   };
   const temporary_user = useSelector(GET_USER);
@@ -79,10 +85,23 @@ function UserHolder({ search }) {
   };
   const handelsave = () => {
     dispatch(editUser());
+    dispatch(
+      showSnackbar({
+        message: "User edited successfully!",
+        severity: "success",
+      })
+    );
+
     setOpenDialog(false);
   };
   const handelDelete = () => {
     dispatch(removeUser());
+      dispatch(
+      showSnackbar({
+        message: "User deleted successfully!",
+        severity: "success",
+      })
+    );
     handleCloseDelete();
   };
   return (
@@ -100,7 +119,7 @@ function UserHolder({ search }) {
         onClose={handelCloseDialog}
         onSave={handelsave}
         open={openDialog}
-        title={"Edit User"}
+        titleName={"Edit User"}
       />
       <DeleteBox
         open={openDelete}

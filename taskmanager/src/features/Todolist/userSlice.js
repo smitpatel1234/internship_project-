@@ -29,20 +29,8 @@ const GET_USER_DEVELOPER_QA = createSelector(
       );
   }
 );
-
-
-const userSlice = createSlice({
-  name: "userStore",
-  initialState: {
-    user: {
-      id: null,
-      username: null,
-      email: null,
-      password: null,
-      roleId: null,
-    },
-    userList: [
-       {
+const generateUsers = () => {
+  const users = [ {
         id: 1,
         username: 'admin',
         email: 'admin@gmail.com',
@@ -78,8 +66,33 @@ const userSlice = createSlice({
         password: 'sdfsd',
         roleId: 12215,
         role: 'Project Manager'
-      }
-    ],
+      },
+      ];
+
+  for (let i = 2; i <= 1000; i++) {
+
+    users.push({
+      id: i,
+      username: `user${i}`,
+      email: `user${i}@gmail.com`,
+      password: null,
+      roleId: 12212 + (i % 4) // 12212–12215
+    });
+  }
+  return users;
+};
+
+const userSlice = createSlice({
+  name: "userStore",
+  initialState: {
+    user: {
+      id: null,
+      username: null,
+      email: null,
+      password: null,
+      roleId: null,
+    },
+    userList:generateUsers(),
   },
   reducers: {
     setChangeInUser: (state, actions) => {
@@ -87,6 +100,7 @@ const userSlice = createSlice({
     },
     addUser: (state, actions) => {
       state.user.id =uuidv4();
+     
       const newUser = { ...state.user };
       state.userList.push(newUser);
     },

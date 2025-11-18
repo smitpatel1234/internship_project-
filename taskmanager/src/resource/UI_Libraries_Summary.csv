@@ -1,0 +1,15 @@
+Library,Category,Mobile Ready?,Limitation,Alternative,Opensource?
+@coreui/react,UI Components,YES ✓,None,N/A,YES
+antd,UI Components,YES ✓,None,N/A,YES
+bootstrap,CSS Framework,YES ✓,None,N/A,YES
+reactstrap,UI Components,YES ✓,None,N/A,YES
+apexcharts,Charts,YES ✓,None,N/A,YES
+react-apexcharts,Charts,YES ✓,None,N/A,YES
+downshift,Select/Dropdown,YES ✓,None,N/A,YES
+react-datepicker,Date Picker,PARTIAL ⚠,Touch UI config needed,React DayPicker,YES
+react-select,Select/Dropdown,PARTIAL ⚠,Dropdown interaction issues,"Downshift, Headless UI",YES
+react-dnd,Drag & Drop,PARTIAL ⚠,Needs TouchBackend,dnd-kit,YES
+react-table,Tables,PARTIAL ⚠,Manual responsive wrapper,Ant Design Table,YES
+recharts,Charts,PARTIAL ⚠,Needs ResponsiveContainer,"Visx, Chart.js",YES
+styled-components,Styling,PARTIAL ⚠,Needs @media queries,"TailwindCSS, Emotion",YES
+react-dnd-html5-backend,Drag & Drop Backend,NO ✗,Desktop only - no touch,react-dnd-touch-backend,YES
