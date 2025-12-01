@@ -4,9 +4,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Children } from 'react';
+import { h } from '@tiptap/core';
 
 
-const ITEM_HEIGHT = 48;
+
 
 
 export default function MenuItemBox({children}) {
@@ -29,30 +30,16 @@ export default function MenuItemBox({children}) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreVertIcon />
+         <MoreVertIcon />
       </IconButton>
       <Menu
         id="long-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        slotProps={{
-          paper: {
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: '13ch',
-            },
-          },
-          list: {
-            'aria-labelledby': 'long-button',
-          },
-        }}
+       
       >
-        {Children.map(children,(option) => (
-          <MenuItem  onClick={handleClose}>
-            {option}
-          </MenuItem>
-        ))}
+       {children}
       </Menu>
     </div>
   );

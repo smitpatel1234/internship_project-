@@ -32,7 +32,7 @@ export default function Login() {
           createdBy:user.id})
        )
      
-      navigate("/dashboardlayout/dashboard");
+      navigate("dashboard");
     } else {
       dispatch(
         setChangeInCurrentUser({

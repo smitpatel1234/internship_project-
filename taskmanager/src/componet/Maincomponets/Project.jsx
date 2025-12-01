@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addProject,
   setChangeInProject,
+  setsearchConf
 } from "../../features/Todolist/projectSlice";
 import ComponentHider from "../Middelware/ComponentHider";
 import { showSnackbar} from '../../features/Todolist/snackbarSlice'
 import { v4 as uuidv4 } from "uuid";
+import Divider from '@mui/material/Divider';
 
 function Project() {
   const currentUser = useSelector(
@@ -18,9 +20,8 @@ function Project() {
   );
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
-  const [search, setSearch] = React.useState("");
   const handelsearch = (value) => {
-    setSearch(value);
+    dispatch(setsearchConf(value));
   };
 
   const handelOpenDialog = () => {
@@ -73,16 +74,16 @@ function Project() {
             </ComponentHider>
           </h2>
           <p>Edit and modify the User as you want</p>
-          <div style={{ flexGrow: 1 }}></div>
+          <div style={{height: '20px'}}></div>
 
-          <hr className="lineofhr" />
+          <Divider />
         </div>
 
-        <Searchbar handleChange={handelsearch} />
+        <Searchbar handleChange={handelsearch}  search={useSelector(state=>state.projectStore.searchconf)}/>
 
         <div className="project">
           <ComponentHider ComponentId={14}>
-            <ProjectHolder search={search} />
+            <ProjectHolder />
           </ComponentHider>
         </div>
       </div>

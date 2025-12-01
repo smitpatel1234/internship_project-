@@ -14,11 +14,16 @@ import { addBoard, changeBoard } from "../../features/Todolist/boardSlice";
 import SelectBox from "../commancomponet/SelectBox";
 import MenuItem from "@mui/material/MenuItem";
 import ComponentHider from "../Middelware/ComponentHider";
-import { GET_PROJECTS, GET_TASK } from "../../features/Todolist/taskSlice";
+import {  GET_TASK } from "../../features/Todolist/taskSlice";
 import { usePermissionChecker } from "../Middelware/ComponentHider";
+import {GET_ASSIGNABLE_USERS_FOR_TASK} from '../../features/Todolist/userAndProjectSlice'
 import { GET_USER_PROJECTS } from "../../features/Todolist/userAndProjectSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Divider from "@mui/material/Divider";
+import MultipleSelectCheckmarks from "./MultipleSelectCheckmarks";
+import { moveBoard } from "../../features/Todolist/boardSlice";
+import {Checkbox , ListItemText} from '@mui/material'
 function Dashboard() {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.taskStore.tasks);
@@ -29,12 +34,14 @@ function Dashboard() {
     () => boardList.filter((board) => board.projectId === currentProject),
     [boardList, currentProject]
   );
-
+  const luserList = useSelector(GET_ASSIGNABLE_USERS_FOR_TASK);
+  const currentUser = useSelector(state => state.currentUserStore.currentUser)
   const projectList = useSelector(GET_USER_PROJECTS);
-
-
+  const [selectedUsernames, setSelectedUsernames] = useState([currentUser.id]);
   const [taskStateColumn, setTaskStateColumn] = useState(boards);
-
+  const onChange =(e)=>{
+      setSelectedUsernames(e.target.value);
+  }
   const MIN_BOARD_NAME = 2;
   const boardFormik = useFormik({
     initialValues: { name: "" },
@@ -43,9 +50,16 @@ function Dashboard() {
         .trim()
         .min(MIN_BOARD_NAME, `Minimum ${MIN_BOARD_NAME} characters required`)
         .required("Board name is required")
-        .test("unique-Board name", "This Board name is already allocated", (value) => {
-          return !boardList.some((board) => board.name === value);
-        }),
+        .test(
+          "unique-Board name",
+          "This Board name is already allocated",
+          (value) => {
+            return !boardList.some(
+              (board) =>
+                board.name === value && board.projectId === currentProject
+            );
+          }
+        ),
     }),
     onSubmit: (values, { resetForm }) => {
       const boardName = values.name.trim();
@@ -83,8 +97,6 @@ function Dashboard() {
   useEffect(() => {
     setTaskStateColumn(boards);
   }, [boards]);
-
-  //logic of drag and drop
   const handleDragStart = (event) => {
     const { active } = event;
     if (!active?.id) return;
@@ -142,6 +154,12 @@ function Dashboard() {
 
     if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
       setTaskStateColumn((cols) => arrayMove(cols, activeIndex, overIndex));
+      dispatch(
+        moveBoard({
+          fromIndex: activeIndex,
+          toIndex: overIndex,
+        })
+      );
       return;
     }
 
@@ -179,7 +197,9 @@ function Dashboard() {
         <div className="overview">
           <h2>Overview</h2>
           <p>Edit and modify the card as you want</p>
-          <hr className="lineofhr" />
+          <div style={{ height: "20px" }}></div>
+
+          <Divider />
         </div>
 
         <ComponentHider ComponentId={15}>
@@ -198,15 +218,26 @@ function Dashboard() {
               ))}
             </SelectBox>
           </div>
-
-          <div className="filtertasklistview">
-            <SelectBox value={"Board View"}>
-              <MenuItem selected value={"List View"}>
-                List View
-              </MenuItem>
-              <MenuItem value={"Board View"}>Board View</MenuItem>
-            </SelectBox>
+          <div className="filteruser">
+      <MultipleSelectCheckmarks
+          value={selectedUsernames}
+          name="Assign To Users"
+          
+          onHandelChangeOnView={onChange}
+          userList={luserList}
+        
+          
+        >
+          {luserList?.map((s) => (
+            <MenuItem key={s.id} value={s.id}>
+               
+              <Checkbox checked={selectedUsernames.includes(s.id)} />
+              <ListItemText primary={s.username} />
+            </MenuItem>
+          ))}
+        </MultipleSelectCheckmarks>
           </div>
+          {projectList.length !== 0 ?
 
           <div className="task-columns">
             <DndContext
@@ -225,6 +256,7 @@ function Dashboard() {
                       barId={col.id}
                       setTaskStateColumn={setTaskStateColumn}
                       taskStateColumn={boards}
+                      filterByUser={selectedUsernames}
                     />
                   </SortableTaskHolder>
                 ))}
@@ -289,19 +321,21 @@ function Dashboard() {
                     }
                   />
 
-                  {(boardFormik.touched.name || boardFormik.submitCount > 0) &&
-                    boardFormik.errors.name && (
+                
                       <p
                         style={{
                           color: "#d32f2f",
                           fontSize: 12,
+                          width: "100%",
+                          height:'5px',
                           margin: "4px 12px",
                         }}
-                      >
-                        {boardFormik.errors.name}
+                      >  {(boardFormik.touched.name || boardFormik.submitCount > 0) &&
+                    boardFormik.errors.name && 
+                        boardFormik.errors.name   }
                       </p>
-                    )}
-                  <div style={{ width: "100%", height: "10vh" }}></div>
+                
+                  <div style={{ width: "100%", height: "45px" }}></div>
                   <div className="taskListSholder">
                     <div className="endspace" onClick={handleAddBoard}>
                       +
@@ -310,7 +344,8 @@ function Dashboard() {
                 </div>
               </div>
             </ComponentHider>
-          </div>
+           
+          </div>: <div className="noProject"> there is no project assigned to you</div>}
         </ComponentHider>
       </div>
     </main>

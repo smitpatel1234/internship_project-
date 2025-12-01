@@ -3,12 +3,15 @@ import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteBox from '../dialogbox/DeleteBox'
+import SaveIcon from '@mui/icons-material/Save';
+
 export default function ButtonBox({
   onClickFunction,
   value,
   stylename,
   editIcon,
   deleteIcon,
+  saveIcon,
   type,
   disabled,
   size,
@@ -21,7 +24,7 @@ export default function ButtonBox({
       <Button
         disabled={disabled}
         sx={{ fontSize: "1em" }}
-        variant= {variant ?? "contained"}
+        variant= { "contained"}
         onClick={onClickFunction}
         type={type}
         size={size}
@@ -31,7 +34,11 @@ export default function ButtonBox({
             <EditIcon fontSize="small" />
           ) : deleteIcon ? (
             <DeleteIcon fontSize="small" />
-          ) : null
+          ) : saveIcon ? (
+            <SaveIcon fontSize="small" />
+          ) : (
+            null
+          )
         }
         {value}
       </Button>

@@ -1,13 +1,13 @@
 :root {
-  --alice-blue: hsla(216, 100%, 97%, 1);
+  --alice-blue: #ecfdff;
   --night: hsla(240, 3%, 8%, 1);
-  --alice-blue-2: rgb(155, 170, 191);
+  --alice-blue-2: #00ACC1;
   --seasalt: hsla(0, 0%, 98%, 1);
   --french-gray: hsla(206, 14%, 80%, 1);
   --yinmn-blue: #33516eff;
   --paynes-gray: #5d7285ff;
   --slate-gray: rgb(145, 144, 144);
-  --celestial-blue: #01a2f9ff;
+  --celestial-blue: #80b4ba;
   --prussian-blue: #1f384cff;
 }
 
@@ -39,15 +39,13 @@ body {
 .header {
   display: flex;
   color: #000000;
-  background: #ffffff;
   justify-content: space-around;
-  box-shadow: 1px 1px 10px var(--alice-blue-2);
   position: sticky;
 }
 .header img {
   border: 0cm;
   border-radius: 50%;
-  width: 3%;
+  width: 100%;
   height: 80%;
   margin: 0.3em;
 }
@@ -134,9 +132,8 @@ body {
   min-width: 9.5em;
 }
 .sidebar ul img {
-  width: 9%;
-  margin: 5%;
-  padding: 5%;
+  width: 30%;
+  height: 10%;
 }
 .sidebar ul article {
   width: 70%;
@@ -166,14 +163,14 @@ body {
   align-items: center;
   border-radius: 10px;
   border:
-    #64b5f6,
+    #00ACC1,
     1px solid;
   align-self: center;
   margin: 1%;
 }
 
 .divsearch i {
-  color: #1976d2;
+  color: #00ACC1;
   font-size: small;
   font-weight: 600;
 }
@@ -191,7 +188,7 @@ body {
   transform: scale(0.8);
 }
 .divsearch ::placeholder {
-  color: #1976d2;
+  color: #00ACC1;
   opacity: 1;
 }
 
@@ -256,7 +253,7 @@ body {
 }
 .searchbar {
   grid-column: 1 / 8; /* span all columns */
-  grid-row: 3 / 5; /* rows 1–4 */
+  grid-row: 4 / 5; /* rows 1–4 */
   width: 100%;
   align-items: center;
   align-content: center;
@@ -332,14 +329,14 @@ body {
 
     cursor: pointer;
     &:hover {
-      background-color: var(--alice-blue-2);
+      background-color: var(--alice-blue);
       box-shadow: 1px 1px 5px var(--prussian-blue);
     }
   }
   .taskListSholder {
     background-color: #ffffff;
     width: 94%;
-    height: 45vh;
+    height: 43vh;
     overflow-y: auto;
 
     margin: auto;
@@ -359,14 +356,16 @@ body {
     }
   }
   .taskcard {
-    width: 92%;
+    width: 90%;
     height: max-content;
-    margin: 1%;
+    margin: auto;
     padding: 2%;
     border-radius: 10px;
     border: var(--french-gray) 2px solid;
     cursor: pointer;
     cursor: pointer;
+    margin-top: 2%;
+    
     &:hover {
       box-shadow: 1px 1px 5px var(--prussian-blue);
     }
@@ -388,33 +387,30 @@ body {
   grid-column: 1/22;
   display: flex;
   gap: 1%;
-  width: 100%;
-  height: 100%;
+  width: 97%;
+  padding: 10px;
+  height: 95%;
   align-items: flex-start;
   overflow-x: auto;
 }
-.dialogbox {
-  width: 100%;
-  height: 100vh;
-  padding: auto;
-}
+
 .css-10d30g3-MuiPaper-root-MuiDialog-paper {
   width: 100%;
   height: 100vh;
   height: 80vh;
-  background-color: var(--alice-blue);
 }
+
 .dialogtitle {
   display: flex;
   flex-direction: row;
+  height: 10vh;
   justify-content: space-between;
-  background-color: var(--alice-blue);
+  border-left-color: yellow;
+  border-left-width: 0.5em;
+  border-left-style: solid;
 }
-.css-rvoa5x-MuiTypography-root-MuiDialogTitle-root {
-  font-size: x-large !important;
-  font-weight: 700 !important;
-  font-family: "Varela Round", sans-serif !important;
-}
+
+
 .lineofhr {
   width: "70%";
   text-align: "left";
@@ -432,31 +428,14 @@ body {
   color: var(--slate-gray);
   opacity: 0.5;
 }
-.buttontext {
-  width: 50% !important;
-  border: none !important;
-  outline: none !important;
-  margin: auto;
-  color: #1a73e8;
-}
+
 .buttontextbox {
   border-radius: 50%;
   margin: 1%;
   padding: 0;
 }
-.buttontextbox > div {
-  padding: 0 !important;
-}
 
-.titelText {
-  width: 20% !important;
-  border: none !important;
-  outline: none !important;
-  margin: 2%;
-  padding: 1%;
-}
 .dialogcontent {
-  background-color: var(--alice-blue);
   max-height: max-content;
 }
 .firstDialogcontainer {
@@ -543,7 +522,6 @@ body {
     width: 10%;
     margin: 1%;
     padding: 1%;
-    background: rgb(0, 162, 255);
     color: white;
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     align-self: center;
@@ -554,16 +532,13 @@ body {
     font-size: small;
     color: grey;
     align-self: center;
+    overflow: hidden;
+        width: 48%;
+    height: 27px;
   }
 }
 
-.css-1973x7a-MuiPickersInputBase-root-MuiPickersOutlinedInput-root {
-  border-color: #1a73e8 !important;
-  border-width: 2px !important;
-}
-.css-769doo-MuiFormControl-root-MuiPickersTextField-root {
-  margin-top: 1em !important;
-}
+
 .login {
   grid-column: 5 /9;
   grid-row: 4 /9;
@@ -667,44 +642,104 @@ body {
   grid-row: 1/22;
   grid-column: 1/22;
 }
+.menubutton {
+  margin: 1%;
+  padding: 1%;
+  button {
+    svg {
+      font-size: 17px ;
+          margin: 5px;
+         color: white;
+    }
+    
+    height: 2em;
+    margin: 1%;
+    padding: 1%;
+    width: 6em ;
+    justify-content:flex-start;
+    
+  }
+}
+.uploadButton{
+    svg{
+            color: white;
+            
+          }
+}
 .tablebutton {
   margin: 1%;
   padding: 1%;
   button {
     svg {
-      font-size: 17px !important;
+      color: white;
+      font-size: 17px ;
+      padding: 5px;
     }
+    
     height: 2em;
-    margin: 1%;
+    margin: 2px;
     padding: 1%;
-    min-width: 3em !important;
-    justify-content: center;
+    min-width: 2em;
+    justify-content:flex-start;
+    
   }
 }
 .cardbutton {
   margin-right: 1%;
   button {
     svg {
-      font-size: 15px !important;
+      font-size: 15px ;
+      color: white;
     }
     height: 2.5em;
     margin: 1%;
     padding: 1%;
-    min-width: 3em !important;
+    min-width: 3em ;
     justify-content: center;
   }
 }
+.discussionbutton {
+ 
+  button {
+    svg {
+      color: white;
+      font-size: 17px ;
+      padding: 5px;
+    }
+    
+    height: 2em;
+    margin: 2px;
+    padding: 1%;
+    min-width: 0em;
+    justify-content:flex-start;
+    
+  }
+}
+.discussionBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100% ;
+}
+.noProject{
+  grid-row: 9/22;
+  grid-column: 2/22;
+  color: darkgrey;
+  font-size: xx-large;
+  text-align: center;
+}
 .addbuttonofproject {
-  grid-row: 1/2;
+  grid-row: 1/3;
   padding: 1em;
   grid-column: 21/22;
-  font-size: 1.5em !important;
-  padding: 0 !important;
-  margin: 0.3em 0.3em 0 0 !important;
-
+  font-size: 1.5em ;
+  padding: 0 ;
+  margin: 0.3em 0.3em 0 0 ;
+  
   button {
-    padding: 0 !important;
-    margin: 0 !important;
+     color: white;
+    padding: 0 ;
+    margin: 0 ;
     width: 20%;
   }
   svg {
@@ -723,11 +758,20 @@ body {
 }
 .filterproject {
   grid-row: 3/6;
-  grid-column: 1/ 5;
+  grid-column: 1/ 4;
   position: relative;
-  width: 98%;
-  margin: 10px;
-  margin-top: 20px;
+  width: 100%;
+  margin: 1%;
+  margin-top: 2%;
+  
+}
+.filteruser {
+  grid-row: 3/6;
+  grid-column: 5/  9;
+  position: relative;
+  width: 100%;
+  margin: 1%;
+  margin-top: 2%;
   
 }
 .filtertasklistview {
@@ -740,12 +784,11 @@ body {
   margin-bottom: 1em;
 }
 
-.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-18jp67o-MuiNativeSelect-root-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  padding-right: 0 !important;
-}
+
 .endspace {
   height: 50%;
   width: 70%;
+  margin: 10%;
   font-size: 20em;
   background: white;
   color: darkgray;
@@ -763,20 +806,20 @@ body {
 
 .endspace:hover {
   transform: scale(1.05);
-  color: #1976d2; /* MUI blue tone */
+  color: #19ccd2; /* MUI blue tone */
   box-shadow: 0 8px 20px rgba(25, 118, 210, 0.3);
   background: #f0f6ff;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(25, 118, 210, 0.4);
+    box-shadow: 0 0 0 0 rgba(25, 192, 210, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 15px rgba(25, 118, 210, 0);
+    box-shadow: 0 0 0 15px rgba(25, 189, 210, 0.059);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(25, 118, 210, 0);
+    box-shadow: 0 0 0 0 rgba(25, 198, 210, 0);
   }
 }
 
@@ -787,13 +830,13 @@ body {
   align-self: start;
   width: 98%;
   border: none;
-  height: 5%;
+  height: 40px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 1%;
   border: none;
   outline: none;
-  background-color: aliceblue;
+  background-color: #ecfdff;
   color: var(--prussian-blue);
   font-weight: 600;
   font-size: small;
@@ -853,7 +896,7 @@ body {
   }
 }
 .css-10d30g3-MuiPaper-root-MuiDialog-paper {
-  max-height: fit-content !important;
+  max-height: fit-content ;
 }
 .error {
   color: red;
@@ -866,9 +909,9 @@ body {
   margin: 1%;
   button {
     font-size: x-small;
-    min-width: 50px !important;
-    margin: 1% !important;
-    padding: 1% !important;
+    min-width: 50px ;
+    margin: 1% ;
+    padding: 1% ;
   }
 }
 .loginheading {
@@ -888,11 +931,53 @@ body {
 }
 .css-1xtozoh-MuiTableRow-root{
   color: inherit;
-    display: flex !important;
+    display: flex ;
     vertical-align: middle;
     outline: 0;
 }
 .date{
-  width: 98% !important;
-  margin: 1% !important;
+  width: 98% ;
+  margin: 1% ;
+}
+.tableheader{
+   background-color: #ecfdff ; 
+   overflow:hidden ;
+    display:flex ;
+    justify-content: space-around;
+    align-items: center;
+    &.action{
+       padding-left: 20px ;
+      justify-content: flex-start ;
+    }
+}
+.texteditor{
+  width: 50% ;
+  min-height: 100px;
+  
+  margin: 10px;
+}
+
+.buttonOfComment{
+  display: flex;
+  justify-content: flex-end;
+   margin: 0.5%;
+   div{
+     margin: 0.5%;
+
+   }
+ 
+}
+.discussionTitle{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  align-items: center;
+}
+.mention-node {
+  display: inline-block;
+  background-color: #e8f3ff;
+  color: #1a73e8;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: 600;
 }

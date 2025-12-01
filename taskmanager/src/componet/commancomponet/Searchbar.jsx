@@ -1,9 +1,9 @@
 import React ,{useCallback, useState}from "react";
 import InputTextInDialog from "../dialogbox/InputTextInDialog.jsx";
 import { debounce } from "lodash";
-function Searchbar({ handleChange }) {
-   const [localSearch , setLocalSearch ] = useState()
-   const handleDebounceChange =useCallback(debounce((value)=> handleChange(value),3000),[handleChange]);
+function Searchbar({ handleChange ,search}) {
+   const [localSearch , setLocalSearch ] = useState(search)
+   const handleDebounceChange =useCallback(debounce((value)=> handleChange(value),1000),[handleChange]);
    const noticeLocalChange= (e)=>{
         const {value} = e.target
             setLocalSearch(value);

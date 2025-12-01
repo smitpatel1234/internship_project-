@@ -9,18 +9,17 @@ import {
 } from "../../features/Todolist/projectSlice";
 import { usePermissionChecker } from "../Middelware/ComponentHider";
 import DeleteBox from "../dialogbox/DeleteBox";
-import { GET_PROJECTS } from "../../features/Todolist/projectSlice";
+import {  FilteredProjectList ,setSortConf} from "../../features/Todolist/projectSlice";
 import {
   saveUserAndProjectListChanges,
   restoreSavedUser,
 } from "../../features/Todolist/userAndProjectSlice";
 import { showSnackbar } from "../../features/Todolist/snackbarSlice";
 
-function ProjectHolder({ search }) {
+function ProjectHolder() {
   const currentUser = useSelector(
     (state) => state.currentUserStore.currentUser
   );
-  console.log(search);
 
   const [column, setColumn] = useState([
     {
@@ -78,14 +77,8 @@ function ProjectHolder({ search }) {
 
   const dispatch = useDispatch();
 
-  const temporary_pro = useSelector(GET_PROJECTS);
-  const projectList = temporary_pro.filter(
-    (project) =>
-      project.title.toLowerCase().includes(search.toLowerCase()) ||
-      project.description.toLowerCase().includes(search.toLowerCase()) ||
-      project.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-      project.managebyName.toLowerCase().includes(search.toLowerCase())
-  );
+ 
+  const projectList =  useSelector(FilteredProjectList);
 
   const handelOpenDialog = (data) => {
     dispatch(setChangeInProject(data));
@@ -116,8 +109,14 @@ function ProjectHolder({ search }) {
       })
     );
     handleCloseDelete();
-  };
 
+  };
+  const sortconfchange = (key, type) => {
+    
+    dispatch(
+      setSortConf({ key: key, type: type })
+    );
+  }
   return (
     <>
       <TableBox
@@ -128,6 +127,7 @@ function ProjectHolder({ search }) {
         deleteIcon={canDelete}
         onEdit={handelOpenDialog}
         onDelete={handleDeleteDailog}
+        sortconfchange={sortconfchange}
       />
 
       <CrateProjectDialog

@@ -6,7 +6,6 @@ import {
   removeRoleAndPermission,
   restoreSavedPermissions
 } from '../../features/Todolist/roleAndPermissionSlice'
-import { showSnackbar} from '../../features/Todolist/snackbarSlice'
 
 function RoleHolder() {
   const dispatch = useDispatch()
@@ -35,14 +34,14 @@ function RoleHolder() {
   }
 
   return (
-    <TableContainer component={Paper}>
+<TableContainer component={Paper} >
       <Table>
-        <TableHead sx={{ backgroundColor: 'aliceblue', color: 'white',width:"100%" }}>
-          <TableRow sx={{display:'block'}}>
-            <TableCell style={{width:"22%" ,overflow:'hidden'}}>Section</TableCell>
-            <TableCell style={{width:"22%",overflow:'hidden'}}>Permission</TableCell>
+        <TableHead sx={{ backgroundColor: '#ecfdff', color: 'white',width:"100%" }}>
+          <TableRow >
+            <TableCell >Section</TableCell>
+            <TableCell >Permission</TableCell>
                {roles.map(role => (
-              <TableCell  style={{width:"17%",overflow:'hidden'}} key={role.id}>{role.name}</TableCell> ))}
+              <TableCell   key={role.id}>{role.name}</TableCell> ))}
           </TableRow>
         </TableHead>
 
@@ -51,8 +50,8 @@ function RoleHolder() {
             const parent = permissionList.find(p => p.id === permission.parentId)
             return (
               <TableRow key={permission.id}>
-                <TableCell style={{width:"20%",overflow:'hidden'}}>{parent ? parent.permission : '-'}</TableCell>
-                <TableCell style={{width:"20%",overflow:'hidden'}}>{permission.permission}</TableCell>
+                <TableCell>{parent ? parent.permission : '-'}</TableCell>
+                <TableCell>{permission.permission}</TableCell>
                 {roles.map(role => (
                   <TableCell key={`${role.id}-${permission.id}`} style={{width:"15%",overflow:'hidden'}}>
                     <Checkbox

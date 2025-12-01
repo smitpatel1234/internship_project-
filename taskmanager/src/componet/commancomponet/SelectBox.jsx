@@ -1,85 +1,38 @@
-import * as React from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { blue } from "@mui/material/colors";
-import { Box } from "@mui/material";
- 
-export const theme = createTheme({
-  palette: {
-    primary: {
-      light: blue[300],
-      main: blue[500],
-      dark: blue[700],
-      darker: blue[900],
-    },
-  },
-  components: {
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          margin: 5,
-          backgroundColor: "#f9f9f9",
-          transition: "border-color 0.25s ease",
-          "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: blue[300],
-          },
-          "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: blue[500],
-          },
-          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderColor: blue[700],
-          },
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: blue[700],
-          "&.Mui-focused": {
-            color: blue[900],
-          },
-        },
-      },
-    },
-    MuiSelect: {
-      styleOverrides: {
-        icon: {
-          color: blue[700],
-        },
-      },
-    },
-  },
-});
 
+ 
 export default function SelectBox({
   label,
   styleName,
   children,
   name,
-  required,
   formik,
   handleChange,
   value
+  , disabled = false
 }) {
- 
 
   return (
-    <ThemeProvider theme={theme} >
-      <Box>
-      <FormControl fullWidth required={required} sx={{m:"1% 0 0 0 "}}>
+     
+      <FormControl sx={{
+        outlineColor: "black",
+        minHeight: "56px",
+        marginBottom: "8px",
+        width: "35%",
+        minWidth: "200px"
+      }}>
         {label && <InputLabel>{label}</InputLabel>}
         <Select
           key={styleName}
           name={name}
-
           label={label}
           value={formik?.values[name] ?? value}
           onChange={formik?.handleChange ?? handleChange}  
           onBlur={formik?.handleBlur}
+          disabled={disabled}
+          sx={{ minHeight: "56px" }}
         >
           {children}
         </Select>
@@ -89,7 +42,6 @@ export default function SelectBox({
           </p>
         )}
       </FormControl>
-      </Box>
-    </ThemeProvider>
+      
   );
 }

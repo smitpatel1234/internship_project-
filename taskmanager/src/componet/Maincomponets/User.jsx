@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import Searchbar from "../commancomponet/Searchbar";
 import ButtonBox from "../commancomponet/ButtonBox";
 import CreateUserDialogBox from "../dialogbox/CreateUserDialogBox";
-import {  useDispatch } from "react-redux";
-import { addUser,setChangeInUser } from "../../features/Todolist/userSlice";
+import {  useDispatch, useSelector } from "react-redux";
+import { addUser,setChangeInUser, setsearchConf} from "../../features/Todolist/userSlice";
 import UserHolder from "../usercomponent/UserHolder";
 import { showSnackbar} from '../../features/Todolist/snackbarSlice'
-
+import Divider from '@mui/material/Divider';
 import ComponentHider from "../Middelware/ComponentHider"
 function User() {
   
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
-  const [search, setSearch] = React.useState("");
+  
     const handelsearch = (value) => {
-    setSearch(value);
+    dispatch(setsearchConf(value));
   };
   const handelOpenDialog = () => {
         dispatch(setChangeInUser({
@@ -61,13 +61,15 @@ function User() {
             />
           </h2>
           <p>Edit and modify the User as you want</p>
-          <div style={{ flexGrow: 1 }}></div>
-          <hr className="lineofhr" />
+          
+           <div style={{height: '20px'}}></div>
+
+          <Divider />
         </div>
-        <Searchbar handleChange={handelsearch} search={search} />        
+        <Searchbar handleChange={handelsearch} search={useSelector(state=>state.userStore.searchconf)} />        
         <div className="project">
            <ComponentHider ComponentId={34}>
-          <UserHolder search={search} />
+          <UserHolder  />
           </ComponentHider>
         </div>
       </div>

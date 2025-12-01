@@ -8,11 +8,10 @@ import {
   setChangeInUser,
 } from "../../features/Todolist/userSlice";
 import DeleteBox from "../dialogbox/DeleteBox";
-import { GET_USER } from "../../features/Todolist/userSlice";
 import { usePermissionChecker } from "../Middelware/ComponentHider";
 import { showSnackbar } from "../../features/Todolist/snackbarSlice";
-
-function UserHolder({ search }) {
+import {FilterUserList,setSortConf } from "../../features/Todolist/userSlice"
+function UserHolder() {
   const [column, setColumn] = React.useState([
     {
       title: "id",
@@ -64,15 +63,7 @@ function UserHolder({ search }) {
     dispatch(setChangeInUser({ id: data }));
     setopenDelet(true);
   };
-  const temporary_user = useSelector(GET_USER);
-
-  const userList = temporary_user.filter(
-    (user) =>
-      user.username.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase()) ||
-      user.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-      user.role.toLowerCase().includes(search.toLowerCase())
-  );
+  const userList  = useSelector(FilterUserList);
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -104,6 +95,12 @@ function UserHolder({ search }) {
     );
     handleCloseDelete();
   };
+    const sortconfchange = (key, type) => {
+      
+      dispatch(
+        setSortConf({ key: key, type: type })
+      );
+    }
   return (
     <>
       <TableBox
@@ -112,6 +109,7 @@ function UserHolder({ search }) {
         rowdata={userList}
         editIcon={canEdit}
         deleteIcon={canDelete}
+        sortconfchange={sortconfchange}
         onEdit={handelOpenDialog}
         onDelete={handleDeleteDailog}
       />

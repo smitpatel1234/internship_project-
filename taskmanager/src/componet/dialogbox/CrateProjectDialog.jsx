@@ -16,7 +16,7 @@ import {
 } from "../../features/Todolist/userSlice";
 import InputTextInDialog from "./InputTextInDialog";
 import SelectBox from "../commancomponet/SelectBox";
-import MultipleSelectCheckmarks from "../commancomponet/MultipleSelectCheckmarks";
+import MultipleSelectCheckmarks from "../Maincomponets/MultipleSelectCheckmarks";
 import {
   addUserAndProjectList,
   removeUserAndProjectList,
@@ -67,8 +67,9 @@ function CrateProjectDialog({ open, onClose, onSave, titleName }) {
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
       await dispatch(setChangeInProject(values));
+      convertSelectedUsersToMapping();
       await onSaveEnd();
-      resetForm({ values: { ...initialValues } });
+      resetForm();
     },
   });
 
@@ -80,56 +81,52 @@ function CrateProjectDialog({ open, onClose, onSave, titleName }) {
   );
 
   useEffect(() => {
-     titleName.includes("Create") ? dispatch(clearUserAndProjectList()) : dispatch(restoreSavedUser());
-    
+    titleName.includes("Create") ? dispatch(clearUserAndProjectList()) : dispatch(restoreSavedUser());
   }, [dispatch, savedUserAndProjectList]);
-
-  const isChecked = (userId, projectId) =>
-    userAndProjectList.some(
-      (r) => r.userId === userId && r.projectId === projectId
-    );
-
-  const handleToggle = (userId, projectId, checked) => {
-    if (checked) {
-      dispatch(addUserAndProjectList({ userId, projectId }));
-    } else {
-      dispatch(removeUserAndProjectList({ userId, projectId }));
-    }
-  };
 
   const [selectedUsernames, setSelectedUsernames] = useState([]);
 
+  const getSelectedUsersForProject = (projectId) => {
+    return userAndProjectList
+      .filter((relation) => relation.projectId === projectId)
+      .map((relation) => relation.userId);
+  };
+
   useEffect(() => {
-    if (luserList && project?.id) {
-      const selected = luserList
-        .filter((u) => isChecked(u.id, project.id))
-        .map((u) => u.username);
+    if (project?.id) {
+      const selected = getSelectedUsersForProject(project.id);
       setSelectedUsernames(selected);
     }
-  }, [project?.id, luserList, userAndProjectList]);
+  }, [project?.id]);
+
   const onHandelChangeOnView = (event) => {
     const {
       target: { value },
     } = event;
     const newSelected = typeof value === "string" ? value.split(",") : value;
-
     setSelectedUsernames(newSelected);
+  };
 
-    if (project?.id) {
-      luserList.forEach((user) => {
-        const shouldBeChecked = newSelected.includes(user.username);
-        const isCurrentlyChecked = isChecked(user.id, project.id);
-        if (shouldBeChecked && !isCurrentlyChecked) {
-          dispatch(
-            addUserAndProjectList({ userId: user.id, projectId: project.id })
-          );
-        } else if (!shouldBeChecked && isCurrentlyChecked) {
-          dispatch(
-            removeUserAndProjectList({ userId: user.id, projectId: project.id })
-          );
-        }
-      });
-    }
+  const convertSelectedUsersToMapping = () => {
+    if (!project?.id) return;
+
+    const currentMapping = userAndProjectList.filter(
+      (r) => r.projectId === project.id
+    );
+
+    currentMapping.forEach((mapping) => {
+      dispatch(removeUserAndProjectList({ 
+        userId: mapping.userId, 
+        projectId: project.id 
+      }));
+    });
+
+    selectedUsernames.forEach((userId) => {
+      dispatch(addUserAndProjectList({ 
+        userId: userId, 
+        projectId: project.id 
+      }));
+    });
   };
 
   const onSaveEnd = async () => {
@@ -142,7 +139,7 @@ function CrateProjectDialog({ open, onClose, onSave, titleName }) {
     <Dialog
       open={open}
       onClose={() => {
-        formik.resetForm({ values: { ...initialValues } });
+        formik.resetForm();
         setSelectedUsernames([]);
         onClose();
       }}
@@ -150,26 +147,12 @@ function CrateProjectDialog({ open, onClose, onSave, titleName }) {
     >
       <div className="dialogtitle">
         <DialogTitle className="dialogtitletext">{titleName}</DialogTitle>
-        <Button
-          onClick={() => {
-            formik.resetForm({ values: { ...initialValues } });
-            setSelectedUsernames([]);
-            onClose();
-          }}
-          color="primary"
-        >
-          &#10060;
-        </Button>
+        
       </div>
 
       <DialogContent className="dialogcontent">
-        <div className="firstDialogcontainer">
           <InputTextInDialog formik={formik} name="title" required />
-        </div>
-
-        <InputTextInDialog formik={formik} name="description" />
-
-        <SelectBox formik={formik} name="manageBy" label="manageBy" handleChange={handleChange} value={formik.values["manageBy"]}>
+         <SelectBox formik={formik} name="manageBy" label="manageBy" handleChange={handleChange} value={formik.values["manageBy"]}>
           
           {userlist?.map((s) => (
             <MenuItem key={s.id} value={s.id}>
@@ -177,35 +160,64 @@ function CrateProjectDialog({ open, onClose, onSave, titleName }) {
             </MenuItem>
           ))}
         </SelectBox>
+       
 
-        <MultipleSelectCheckmarks
-          key={selectedUsernames.join(",")}
+        
+
+        { project.id &&
+          <MultipleSelectCheckmarks
           value={selectedUsernames}
           name="Assign To Users"
           onHandelChangeOnView={onHandelChangeOnView}
           disabled={!project.id}
+          userList={luserList}
+          projectId={project?.id}
+          mappingList={userAndProjectList}
         >
-
           {luserList?.map((s) => (
-            <MenuItem key={s.id} value={s.username}>
-              <Checkbox
-                checked={isChecked(s.id, project.id)}
-                onChange={(e) =>
-                  handleToggle(s.id, project.id, e.target.checked)
-                }
-              />
+            <MenuItem key={s.id} value={s.id}>
+              <Checkbox checked={selectedUsernames.includes(s.id)} />
               <ListItemText primary={s.username} />
             </MenuItem>
           ))}
         </MultipleSelectCheckmarks>
+        }
+         <InputTextInDialog formik={formik} name="description" />
       </DialogContent>
 
       <DialogActions className="dialogtitle">
         <Button
+          onClick={() => {
+            formik.resetForm({ values: { ...initialValues } });
+            setSelectedUsernames([]);
+            onClose();
+          }}
+          color="inherit"
+          sx={{
+            minHeight: "40px",
+            minWidth: "80px",
+            fontWeight: "600",
+            textTransform: "none",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.04)"
+            }
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
           onClick={formik.handleSubmit}
           color="primary"
-          className="dialogtitletext"
-          variant="outlined"
+          variant="contained"
+          sx={{
+            minHeight: "40px",
+            minWidth: "100px",
+            fontWeight: "600",
+            textTransform: "none",
+            borderRadius: "4px"
+          }}
         >
           {titleName.includes("Create") ? "Create" : "Edit"}
         </Button>

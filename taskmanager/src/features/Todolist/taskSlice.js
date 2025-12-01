@@ -3,14 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const tasks = (state)=>(state.taskStore.tasks) 
 const currentUser = (state)=>(state.currentUserStore.currentUser)
-const GET_TASK = createSelector([tasks,currentUser],(tasks,currentUser)=>(
-   tasks.filter((task)=>(task.createdBy==currentUser.id || task.assigTo==currentUser.id || 
- task.assigBY==currentUser.id
+const GET_TASK = createSelector([tasks,currentUser,(state,userList)=>userList,],(tasks,currentUser,userList)=>(
+   tasks.filter((task)=>(
+    
+    userList.find((id)=>(id == task.assignBy))
   ))
 ))
-const GET_PROJECTS = createSelector([GET_TASK],(GET_TASK)=>(
-   new Set(GET_TASK.map((task)=>task.projectId)))
-)
+
 
 
 
@@ -30,6 +29,7 @@ const taskSlice = createSlice({
         assigTo:null,
         assignBy:null,
         projectId:null,
+        files:[], 
     },
   },
 
@@ -68,7 +68,7 @@ const taskSlice = createSlice({
     },
     editTask: (state, actions) => {
 
-      const { id, title, description, state: newState,date, assigTo, assignBy, projectId } = state.task;
+      const { id, title, description, state: newState,date, assigTo, assignBy, projectId, files } = state.task;
       const task = state.tasks.find((task) => task.id == id);
       if (task) {
         task.title = title;
@@ -78,10 +78,11 @@ const taskSlice = createSlice({
         task.assigTo = assigTo;
         task.assignBy = assignBy;
         task.projectId = projectId;
+        task.files = files || [];
       }
     },
 },});
 
 export const { addTask, removeTask, changeStatus, editTask,setChange,moveTask} = taskSlice.actions;
 export default taskSlice.reducer;
-export {GET_TASK,GET_PROJECTS};
+export {GET_TASK};

@@ -16,7 +16,7 @@ import { showSnackbar } from "../../features/Todolist/snackbarSlice";
 function EditTask({ open, onClose, title }) {
   const dispatch = useDispatch();
   const board = useSelector((state) => state.boardStore.board);
-
+  
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .trim()
@@ -39,11 +39,17 @@ function EditTask({ open, onClose, title }) {
     },
     validationSchema,
     enableReinitialize: true,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       dispatch(changeBoard(values));
       onSave();
+      resetForm();
     },
   });
+  const onCloseHandel = () => {
+    formik.resetForm();
+    onClose();
+
+  }
   return (
     <Dialog
       open={open}
@@ -55,15 +61,7 @@ function EditTask({ open, onClose, title }) {
     >
       <div className="dialogtitle">
         <DialogTitle className="dialogtitletext">{title}</DialogTitle>
-        <Button
-          onClick={() => {
-            formik.resetForm();
-            onClose();
-          }}
-          color="primary"
-        >
-          &#10060;
-        </Button>
+        
       </div>
 
       <DialogContent className="dialogcontent">
@@ -75,8 +73,25 @@ function EditTask({ open, onClose, title }) {
           handleChange={formik.handleChange}
         />
       </DialogContent>
-
+      
       <DialogActions className="dialogtitle">
+        <Button
+          onClick={onCloseHandel}
+          color="inherit"
+          sx={{
+            minHeight: "40px",
+            minWidth: "80px",
+            fontWeight: "600",
+            textTransform: "none",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.04)"
+            }
+          }}
+        >
+          Cancel
+        </Button>
         <Button
           onClick={formik.handleSubmit}
           color="primary"

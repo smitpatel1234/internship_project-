@@ -12,7 +12,6 @@ export default function SortableTaskHolder({ id, children }) {
     zIndex: 12,
     position: "relative",
     cursor: "grab",
-    width: "100%",
   };
 
   return (

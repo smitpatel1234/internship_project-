@@ -105,4 +105,11 @@ export const GET_ASSIGNABLE_USERS_FOR_TASK = createSelector(
   }
 );
 
+// Return array of userIds assigned to a given projectId
+export const GET_ASSIGNEES_FOR_PROJECT = (state, projectId) => {
+  if (!projectId) return [];
+  const mapping = state.userAndProjectSliceStore.userAndProjectList || [];
+  return mapping.filter((m) => m.projectId === projectId).map((m) => m.userId);
+};
+
 export default userAndProjectSlice.reducer;

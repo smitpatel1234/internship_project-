@@ -14,7 +14,8 @@ import DeleteBox from "../dialogbox/DeleteBox";
 import ComponentHider, { usePermissionChecker } from "../Middelware/ComponentHider";
 import { GET_TASK } from "../../features/Todolist/taskSlice";
 import { showSnackbar} from '../../features/Todolist/snackbarSlice'
-
+import { MenuItem } from "@mui/material";
+import { current } from "@reduxjs/toolkit";
 export function todaysdate() {
   let now = new Date(Date.now());
   let year = now.getFullYear();
@@ -24,10 +25,9 @@ export function todaysdate() {
   return `${year}-${month}-${day}`;
 }
 
-function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn ,taskStateColumn}) {
+function TaskHolder({ barname, listeners, attributes, barId ,filterByUser}) {
   const [openDelete, setopenDelet] = React.useState(false);
-
-
+  const currentUser = useSelector((state) => state.currentUserStore.currentUser);
   const handleCloseDelete = () => {
     setopenDelet(false);
   };
@@ -39,7 +39,8 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
   const handleClose = () => {
     setOpen(false);
   };
-  const tasks = useSelector(GET_TASK);
+  
+  const tasks = useSelector(state =>GET_TASK(state,filterByUser));
   const [openDialog, setOpenDialog] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -80,8 +81,10 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
         id: null,
         title: null,
         state: barId,
+        assigTo:currentUser.id,
         description: null,
-        date: todaysdate(),
+        date: null,
+        files:[], 
       })
     );
 
@@ -104,24 +107,30 @@ function TaskHolder({ barname, listeners, attributes, barId ,setTaskStateColumn 
 
        {(usePermissionChecker(18) || usePermissionChecker(17)) &&
         <MenuItemBox>
+        <MenuItem>
         <ComponentHider ComponentId={18}>
           <ButtonBox
-            stylename="tablebutton"
+            stylename="menubutton"
             editIcon
-            value={" Edit "}
+            value={"Edit"}
             variant={"outlined"}
+            
             onClickFunction={handleEdit}
           />
           </ComponentHider>
+          </MenuItem>
+          <MenuItem>
           <ComponentHider ComponentId={17}>
           <ButtonBox
-            stylename="tablebutton"
+            stylename="menubutton"
             deleteIcon
             value={"Delete"}
             variant={"outlined"}
             onClickFunction={handleDeleteDailog}
           />
           </ComponentHider>
+           
+          </MenuItem>
         </MenuItemBox>}
       </div>
       <ComponentHider ComponentId={7}>

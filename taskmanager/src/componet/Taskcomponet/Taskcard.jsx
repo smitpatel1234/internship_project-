@@ -1,11 +1,12 @@
 import React from "react";
 import CreateTaskDialog from "../dialogbox/CreateTaskDialog";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   editTask,
   setChange,
   removeTask,
 } from "../../features/Todolist/taskSlice";
+import { GET_ASSIGNEES_FOR_PROJECT } from "../../features/Todolist/userAndProjectSlice";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import ButtonBox from "../commancomponet/ButtonBox";
@@ -16,6 +17,13 @@ import { showSnackbar } from "../../features/Todolist/snackbarSlice";
 export default function Taskcard({ task, id }) {
   const [EditDialog, setEditDialog] = React.useState(false);
   const dispatch = useDispatch();
+  const currentUser = useSelector((s) => s.currentUserStore?.currentUser || s.currentUser);
+  const project = useSelector((s) =>
+    (s.projectStore?.projectList || []).find((p) => p.id === task?.projectId)
+  );
+  const isProjectManager = !!(currentUser && (project?.manageBy === currentUser.id || project?.createdBy === currentUser.id || currentUser.roleId === 12212));
+  const isTaskAssignee = !!(currentUser && task?.assigTo === currentUser.id);
+  const canEdit = isProjectManager || isTaskAssignee || (currentUser && currentUser.roleId === 12212);
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -87,6 +95,7 @@ export default function Taskcard({ task, id }) {
             stylename="cardbutton"
             deleteIcon={true}
             onClickFunction={handleDeleteDailog}
+            disabled={!canEdit}
           />
         </ComponentHider>
         <span style={{ flexGrow: "1" }} />
@@ -107,6 +116,7 @@ export default function Taskcard({ task, id }) {
         open={EditDialog}
         onClose={handelTaskDialog}
         onSave={handelTaskEdit}
+        canEdit={canEdit}
       />
     </div>
   );

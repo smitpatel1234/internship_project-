@@ -9,6 +9,8 @@ import  boardStoreReducer from '../features/Todolist/boardSlice'
 import currentUserStoreReducer from '../features/currentUser/currentUserSlice'
 import userAndProjectSliceStoreReducer from '../features/Todolist/userAndProjectSlice'
 import snackbarSliceStoreReducer from '../features/Todolist/snackbarSlice'
+import discussionStoreReducer from '../features/Todolist/discussionSlice'
+import alertStoreReducer from '../features/Todolist/alertSlice'
 import {persistStore , persistReducer , FLUSH,REHYDRATE,PAUSE,PERSIST,PURGE,REGISTER} from 'redux-persist'
 import storage from 'redux-persist/lib/storage' 
 const persistConfig = {
@@ -25,7 +27,9 @@ const rootReducer =combineReducers({
      boardStore:boardStoreReducer,
      currentUserStore:currentUserStoreReducer,
      userAndProjectSliceStore:userAndProjectSliceStoreReducer,
-     snackbarSliceStore:snackbarSliceStoreReducer
+     snackbarSliceStore:snackbarSliceStoreReducer,
+    alertStore: alertStoreReducer,
+     discussionStore:discussionStoreReducer
 })
 const persistedReducer = persistReducer(persistConfig,rootReducer)
 export const store = configureStore({
